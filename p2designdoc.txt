@@ -1,0 +1,35 @@
+Ricardo Escobar
+Joey Ewbank
+Samuel Williamson
+
+DESIGN
+
+3D version of pong. Rectangular paddle moves along the XY plane (controlled by either mouse or keyboard) in an empty room and can swing at a ball bouncing around the room. Player gets a point/points each time they hit the ball, and loses a life/health point from the player each time the ball hits the wall behind the paddle. UI elements for both of these things (perhaps in the top two corners of the screen). Sounds will indicate a successful hit, a whiff, or the back wall being hit. Velocity/mass/bounciness of ball will be determined after testing. Could consider adding a goal area for the player to hit the ball into.
+
+
+
+
+SOFTWARE ARCHITECTURE (tentative)
+
+At a high level, our software will be composed of three major parts: the objects in the scene, the main loop, and the game state. We intend to have three major objects: the ball, the paddle, and the room. The behaviors of these objects will be hidden in act or move methods which are called from the main loop. General interactions, as well as game logic, will be handled by the basic application, and not in the individual objects. More specific interactions, such as the ball with the paddle or the ball with the back wall, will be handled by the objects. In these circumstances, specific objects will have access to each other through membership. Game state will be handled in a separate object so that it is easily read/writable, allowing for things like pauses and saves.
+
+The bulk of the difficulty of our plan is mostly in the basic collision detection, so we have to make sure we get this working first. Things like the GUI and user interaction can be stripped down to meet a tight deadline, but we have to at least get the collisions working fairly early. Integrating things towards the end shouldn't be too difficult for this project, as most of the components are fairly separate, and won't cause collisions (pun intended) with each other.
+
+
+
+DIVISION OF LABOR (tentative)
+
+Joey:
+
+Physics (collision, gravity, etc.)
+Input (control scheme and handling, etc.)
+
+Sam:
+
+Sound (effects, music, etc.)
+Misc. function programming
+
+Ricardo:
+
+Graphics (textures, geometry, lighting, etc.)
+GUI (score tracked, menus, etc.)
