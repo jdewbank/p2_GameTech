@@ -1,12 +1,11 @@
-ACLOCAL_AMFLAGS= -I m4
-noinst_HEADERS= BaseApplication.h TutorialApplication.h Objects.h
+noinst_HEADERS = Application.h Objects.h BaseApplication.h
 
-bin_PROGRAMS= OgreApp
-OgreApp_CPPFLAGS= -I$(top_srcdir)
-OgreApp_SOURCES= BaseApplication.cpp TutorialApplication.cpp Objects.cpp
-OgreApp_CXXFLAGS= $(OGRE_CFLAGS) $(OIS_CFLAGS)
-OgreApp_LDADD= $(OGRE_LIBS) $(OIS_LIBS)
-OgreApp_LDFLAGS= -lOgreOverlay -lboost_system
+bin_PROGRAMS = assignment2
+assignment2_CPPFLAGS = -I$(top_srcdir)
+assignment2_SOURCES = Application.cpp Objects.cpp BaseApplication.cpp
+assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
+assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
+assignment2_LDFLAGS = -lOgreOverlay -lboost_system
 
-EXTRA_DIST= buildit makeit
-AUTOMAKE_OPTIONS= foreign
+EXTRA_DIST = buildit makeit
+AUTOMAKE_OPTIONS = foreign

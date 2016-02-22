@@ -1,6 +1,6 @@
 /*
 -----------------------------------------------------------------------------
-Filename:    TutorialApplication.cpp
+Filename:    Application.cpp
 -----------------------------------------------------------------------------
 
 This source file is part of the
@@ -15,19 +15,19 @@ http://www.ogre3d.org/wiki/
 -----------------------------------------------------------------------------
 */
 
-#include "TutorialApplication.h"
+#include "Application.h"
 
 //---------------------------------------------------------------------------
-TutorialApplication::TutorialApplication(void)
+Application::Application(void)
 {
 }
 //---------------------------------------------------------------------------
-TutorialApplication::~TutorialApplication(void)
+Application::~Application(void)
 {
 }
 
 //---------------------------------------------------------------------------
-void TutorialApplication::createScene(void)
+void Application::createScene(void)
 {
     //Lights
     // mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
@@ -49,7 +49,7 @@ void TutorialApplication::createScene(void)
 }
 
 
-bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
+bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 
     if(mWindow->isClosed())
@@ -103,7 +103,7 @@ extern "C" {
 #endif
     {
         // Create application object
-        TutorialApplication app;
+        Application app;
 
         try {
             app.go();

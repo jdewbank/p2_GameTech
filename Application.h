@@ -1,6 +1,6 @@
 /*
 -----------------------------------------------------------------------------
-Filename:    TutorialApplication.h
+Filename:    Application.h
 -----------------------------------------------------------------------------
 
 This source file is part of the
@@ -15,19 +15,19 @@ http://www.ogre3d.org/wiki/
 -----------------------------------------------------------------------------
 */
 
-#ifndef __TutorialApplication_h_
-#define __TutorialApplication_h_
+#ifndef __Application_h_
+#define __Application_h_
 
 #include "BaseApplication.h"
 #include "Objects.h"
 
 //---------------------------------------------------------------------------
 
-class TutorialApplication : public BaseApplication
+class Application : public BaseApplication
 {
 public:
-    TutorialApplication(void);
-    virtual ~TutorialApplication(void);
+    Application(void);
+    virtual ~Application(void);
 
 protected:
 	Ball* mBall;
@@ -39,6 +39,6 @@ protected:
 
 //---------------------------------------------------------------------------
 
-#endif // #ifndef __TutorialApplication_h_
+#endif // #ifndef __Application_h_
 
 //---------------------------------------------------------------------------
