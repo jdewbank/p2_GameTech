@@ -3,6 +3,8 @@
 #include <OgreEntity.h> 
 #include <OgreSceneManager.h> 
 
+#include "PlayingField.h"
+
 class Ball { 
 	protected: 
 		Ogre::SceneNode* rootNode; 
