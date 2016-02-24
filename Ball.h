@@ -3,7 +3,7 @@
 #include <OgreEntity.h> 
 #include <OgreSceneManager.h> 
 
-#include "PlayingField.h"
+#include "PhysicsWorld.h"
 
 class Ball { 
 	protected: 
@@ -11,12 +11,10 @@ class Ball {
 		Ogre::Real bRadius; 
 		Ogre::Vector3 bDirection; 
 		Ogre::Real bSpeed; 
-		PlayingField* grounds; 
+		PhysicsWorld* world;
 
 	public: 
-		Ball(Ogre::SceneManager* scnMgr); 
+		Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys); 
 		~Ball(); 
-		void move(const Ogre::FrameEvent& evt); 
 		Ogre::SceneNode* getNode() { return rootNode; } 
-		void setPlayingField(PlayingField * pf) { grounds = pf; } 
 };

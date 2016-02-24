@@ -20,6 +20,7 @@ http://www.ogre3d.org/wiki/
 
 #include "BaseApplication.h"
 #include "Ball.h"
+#include "PlayingField.h"
 
 
 //---------------------------------------------------------------------------
@@ -31,10 +32,11 @@ public:
     virtual ~Application(void);
 
 protected:
-	Ball* mBall;
-	PlayingField* mField;
-    virtual void createScene(void);
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+  Ball* mBall;
+  PlayingField* mField;
+  PhysicsWorld* mPhysics;
+  virtual void createScene(void);
+  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 };
 
 

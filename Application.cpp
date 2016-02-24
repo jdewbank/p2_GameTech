@@ -29,31 +29,43 @@ Application::~Application(void)
 //---------------------------------------------------------------------------
 void Application::createScene(void)
 {
+    //Set up Physics
+    mPhysics = new PhysicsWorld();
+
     //Lights
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(0, 0, 0);
+    light->setPosition(100, 0, 0);
 
     //Camera
     mCamera->setPosition(0, 0, 200);
 
     //Sphere
-    mBall = new Ball(mSceneMgr);
+    mBall = new Ball(mSceneMgr, mPhysics);
 
     //Cube
     Ogre::Real fieldSize = 200;
-    mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize));
-
-    mBall->setPlayingField(mField);
+    mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
     
 }
 
 
 bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-
     bool super = BaseApplication::frameRenderingQueued(evt);
+
     if(super)
-        mBall->move(evt);
+    {
+        // if(mPhysics == NULL)
+        //     return super;
+
+        // mPhysics->stepSimulation(1.0f/60.0f);
+
+        // mPhysics->move();
+
+        std::cout << "FRQ" << std::endl;
+        mBall->getNode()->translate(1.0 * evt.timeSinceLastFrame * Ogre::Vector3(1,0,0));
+    }
+
 
     return super;
 }
