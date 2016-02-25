@@ -29,6 +29,8 @@ Application::~Application(void)
 //---------------------------------------------------------------------------
 void Application::createScene(void)
 {
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(1, 0, 0));
+
     //Set up Physics
     mPhysics = new PhysicsWorld();
 
@@ -55,17 +57,14 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     if(super)
     {
-        // if(mPhysics == NULL)
-        //     return super;
+        if(mPhysics == NULL)
+            return super;
 
-        // mPhysics->stepSimulation(1.0f/60.0f);
+        mPhysics->stepSimulation(evt.timeSinceLastFrame);
 
-        // mPhysics->move();
+        mPhysics->move();
 
-        std::cout << "FRQ" << std::endl;
-        mBall->getNode()->translate(1.0 * evt.timeSinceLastFrame * Ogre::Vector3(1,0,0));
     }
-
 
     return super;
 }

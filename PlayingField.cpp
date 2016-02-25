@@ -8,31 +8,23 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btVector3 localPlaneInertia(0,0,0);
 
     //Positive X plane
-    Ogre::Plane posXplane(Ogre::Vector3::UNIT_X, -cSizeWHL.x/2.0f);
-    Ogre::MeshManager::getSingleton().createPlane(
-        "posX",
-        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-        posXplane, 
-        cSizeWHL.y, cSizeWHL.z, 20, 20, 
-        true, 
-        1, 5, 5, 
-        Ogre::Vector3::UNIT_Z);
+    // Ogre::Plane posXplane(Ogre::Vector3::UNIT_X, -cSizeWHL.x/2.0f);
+    // Ogre::MeshManager::getSingleton().createPlane(
+    //     "posX",
+    //     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+    //     posXplane, 
+    //     cSizeWHL.y, cSizeWHL.z, 20, 20, 
+    //     true, 
+    //     1, 5, 5, 
+    //     Ogre::Vector3::UNIT_Z);
 
-    Ogre::Entity* posX = scnMgr->createEntity("posX");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posX);
+    // Ogre::Entity* posX = scnMgr->createEntity("posX");
+    // scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posX);
 
-    posX->setCastShadows(false);
-    posX->setMaterialName("Examples/Rockwall");
+    // posX->setCastShadows(false);
+    // posX->setMaterialName("Examples/Rockwall");
 
-    // btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 0);
-    // btDefaultMotionState* groundMotionState = new btDefaultMotionState();
 
-    // groundShape->calculateLocalInertia(planeMass, localPlaneInertia);
-
-    // btRigidBody::btRigidBodyConstructionInfo groundRBInfo(planeMass, groundMotionState, groundShape, localPlaneInertia);
-    // btRigidBody* groundBody = new btRigidBody(groundRBInfo);
-
-    // world->addRigidBodyToDynamicsWorld(groundBody);
 
     /*
     //Negative X plane
@@ -68,7 +60,8 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
 
     negY->setCastShadows(false);
     negY->setMaterialName("Examples/Rockwall");
-    
+    */
+
     //Positive Y plane
     Ogre::Plane posYplane(Ogre::Vector3::UNIT_Y, -cSizeWHL.y/2.0f);
     Ogre::MeshManager::getSingleton().createPlane(
@@ -86,6 +79,23 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     posY->setCastShadows(false);
     posY->setMaterialName("Examples/Rockwall");
 
+    btTransform groundTransform;
+    groundTransform.setIdentity();
+    groundTransform.setOrigin(btVector3(0, -cSizeWHL.y/2.0f, 0));
+
+    btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 0);
+    btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);
+
+    groundShape->calculateLocalInertia(planeMass, localPlaneInertia);
+
+    btRigidBody::btRigidBodyConstructionInfo groundRBInfo(planeMass, groundMotionState, groundShape, localPlaneInertia);
+    btRigidBody* groundBody = new btRigidBody(groundRBInfo);
+
+    groundBody->setRestitution(1);
+
+    world->addRigidBodyToDynamicsWorld(groundBody);
+
+    /*
     //Negative Z plane
     Ogre::Plane negZplane(-1*Ogre::Vector3::UNIT_Z, -cSizeWHL.y/2.0f);
     Ogre::MeshManager::getSingleton().createPlane(

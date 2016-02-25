@@ -19,7 +19,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
     rootNode->translate(0,1,0);
     bSpeed = 1.0f;
 
-    /*
+    
     btCollisionShape* ballShape = new btSphereShape(btScalar(bRadius));
     world->addCollisionShape(ballShape);
 
@@ -42,7 +42,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
     ballRB->setUserPointer(rootNode);
 
     world->addRigidBodyToDynamicsWorld(ballRB);
-    */
+    
     //trackrigidbodywithname?
 
 } 
