@@ -8,7 +8,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btVector3 localPlaneInertia(0,0,0);
 
     btScalar wallRestitution(.75f);
-    btScalar groundRestitution(1.2f);
+    btScalar groundRestitution(.75f);
 
     //Negative X plane
     Ogre::Plane negXplane(Ogre::Vector3::UNIT_X, -cSizeWHL.x/2.0f);

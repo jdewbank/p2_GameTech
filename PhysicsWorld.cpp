@@ -103,6 +103,7 @@ void PhysicsWorld::move(void)
 {
 
     detectCollisions();
+    //std::cout << collisionShapes.size() << std::endl;
     for(int i = 0; i < collisionShapes.size(); ++i)
     {
         btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
@@ -122,10 +123,15 @@ void PhysicsWorld::move(void)
 
                 Ogre::SceneNode* sn = static_cast<Ogre::SceneNode*>(userPointer);
 
+
                 if(sn->getName() == "ball")
                 {
-                    body->applyForce(btVector3(forceDir * 25,0,0), btVector3(0,0,0));
-                    std::cout << "BALLS!" << std::endl;
+                    body->applyForce(btVector3(0,0,forceDir * 10), btVector3(0,0,0));
+                    //std::cout << "BALLS!" << std::endl;
+
+                } else if(sn->getName() == "paddle")
+                {
+                    //std::cout << "PADDLE!" << std::endl;
 
                 }
                     

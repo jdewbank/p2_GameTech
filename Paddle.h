@@ -7,7 +7,7 @@
 
 class Paddle { 
 	protected: 
-		Ogre::SceneNode* rootNode; 
+		Ogre::SceneNode* paddleNode; 
 		Ogre::Real Xcoordinate;
 		Ogre::Real Ycoordinate; 
 		PhysicsWorld* world;
@@ -15,5 +15,5 @@ class Paddle {
 	public: 
 		Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys); 
 		~Paddle(); 
-		Ogre::SceneNode* getNode() { return rootNode; } 
+		Ogre::SceneNode* getNode() { return paddleNode; } 
 };

@@ -44,13 +44,16 @@ void Application::createScene(void)
     //Sphere
     mBall = new Ball(mSceneMgr, mPhysics);
 
-    //Cube
+
     Ogre::Real fieldSize = 200;
-    mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
-    
     //Paddle
-    Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.01f);
+    Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
     mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics);
+
+
+    //PlayingField
+    
+    mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
 }
 
 

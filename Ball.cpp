@@ -16,7 +16,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
 
     
     
-    rootNode->translate(0,1,0);
+    rootNode->translate(0,0,0);
     bSpeed = 1.0f;
 
     

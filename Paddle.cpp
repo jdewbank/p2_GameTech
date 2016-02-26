@@ -1,7 +1,6 @@
 #include "Paddle.h"
 
 Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys) { 
-    srand(time(NULL));
 
     world = phys;
 
@@ -9,15 +8,16 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     // paddle->setMaterialName("PaddleColor/CubeMap"); 
 
     paddle->setCastShadows(true); 
-    rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle"); 
-    rootNode->attachObject(paddle); 
-    rootNode->scale(paddleSpecs);
+    paddleNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle"); 
+    std::cout << "Created sceneNode with name: " << paddleNode->getName() << std::endl;
+    paddleNode->attachObject(paddle); 
+    paddleNode->scale(paddleSpecs);
 
-    rootNode->translate(0,0,fieldSize/2);
+    paddleNode->translate(0,0,fieldSize/2 - 10);
     
-    btScalar paddleX = paddleSpecs.x;
-    btScalar paddleY = paddleSpecs.y;
-    btScalar paddleZ = paddleSpecs.z;
+    btScalar paddleX = paddleSpecs.x * 50;
+    btScalar paddleY = paddleSpecs.y * 50;
+    btScalar paddleZ = paddleSpecs.z * 50;
     btVector3 whl = btVector3(paddleX, paddleY, paddleZ);
     btCollisionShape* paddleShape = new btBoxShape(whl);
     world->addCollisionShape(paddleShape);
@@ -25,10 +25,10 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     btTransform startTransform;
     startTransform.setIdentity();
 
-    btScalar mass(.1f);
+    btScalar mass(.0f);
     btVector3 inertia(0,0,0);
 
-    startTransform.setOrigin(btVector3(0,0,0));
+    startTransform.setOrigin(btVector3(0,0,fieldSize/2 - 10));
 
     paddleShape->calculateLocalInertia(mass, inertia);
 
@@ -37,8 +37,10 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, paddleMotionState, paddleShape, inertia);
     btRigidBody* paddleRB = new btRigidBody(rbInfo);
 
-    paddleRB->setRestitution(1);
-    paddleRB->setUserPointer(rootNode);
+    paddleRB->setRestitution(1.2);
+    paddleRB->setUserPointer(paddleNode);
+    paddleRB->setLinearFactor(btVector3(1,1,0));
+    paddleRB->setAngularFactor(btVector3(0,0,0));
 
     world->addRigidBodyToDynamicsWorld(paddleRB);
     
