@@ -9,7 +9,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
     // ball->setMaterialName("BallColor/CubeMap"); 
 
     ball->setCastShadows(true); 
-    rootNode = scnMgr->getRootSceneNode()->createChildSceneNode(); 
+    rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("ball"); 
     rootNode->attachObject(ball); 
     rootNode->scale(0.1f,0.1f,0.1f); 
     bRadius = 10.0f; 

@@ -61,7 +61,6 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             return super;
 
         mPhysics->stepSimulation(evt.timeSinceLastFrame);
-
         mPhysics->move();
 
     }

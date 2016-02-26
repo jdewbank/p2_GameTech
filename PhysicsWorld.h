@@ -22,12 +22,14 @@ protected:
     btDiscreteDynamicsWorld* dynamicsWorld;
 	std::vector<btCollisionShape *> collisionShapes;
 	std::map<std::string, btRigidBody *> physicsAccessors;
+    float forceDir;
 
 public:
     PhysicsWorld(void);
     void addRigidBodyToDynamicsWorld(btRigidBody*);
     void addCollisionShape(btCollisionShape*);
     void stepSimulation(btScalar);
+    void detectCollisions(void);
     void move(void);
 };
 
