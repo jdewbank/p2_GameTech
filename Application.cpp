@@ -48,6 +48,9 @@ void Application::createScene(void)
     Ogre::Real fieldSize = 200;
     mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
     
+    //Paddle
+    Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.01f);
+    mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics);
 }
 
 
