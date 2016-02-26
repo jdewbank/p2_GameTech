@@ -7,8 +7,9 @@ PhysicsWorld::PhysicsWorld(void)
     overlappingPairCache = new btDbvtBroadphase();
     solver = new btSequentialImpulseConstraintSolver();
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0,-200,0));
+    dynamicsWorld->setGravity(btVector3(0,0,0));
     forceDir = 1.0f;
+    collisionIgnoreTimer = 20;
 }
 
 
@@ -31,6 +32,14 @@ void PhysicsWorld::detectCollisions(void)
 {
     int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
 
+
+    if(collisionIgnoreTimer > 0 && collisionIgnoreTimer != 20) 
+    {
+        collisionIgnoreTimer--;
+    } else {
+        collisionIgnoreTimer = 20;
+    }
+
     for(int i = 0; i < numManifolds; ++i) 
     {
         btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -42,36 +51,48 @@ void PhysicsWorld::detectCollisions(void)
 
         int numContacts = contactManifold->getNumContacts();
 
+
         for(int j = 0; j < numContacts; ++j) 
         {
             btManifoldPoint& pt = contactManifold->getContactPoint(j);
-            if(pt.getDistance() < 0.f) 
+            if(pt.getDistance() <= 1.0f) 
             {
                 const btVector3& ptA = pt.getPositionWorldOnA();
                 const btVector3& ptB = pt.getPositionWorldOnB();
                 const btVector3& normalOnB = pt.m_normalWorldOnB;
-                std::cout << "collision detected!" << std::endl;
-                forceDir*=-1;
 
-                if(userPointerA)
+                //std::cout << collisionIgnoreTimer << std::endl;
+                //std::cout << "collision detected!" << std::endl;    
+
+                if(collisionIgnoreTimer == 20) 
                 {
-                    Ogre::SceneNode* snA = static_cast<Ogre::SceneNode*>(userPointerA);
+                    collisionIgnoreTimer--;
+                    //collisionIgnore = true;
 
-                    if(snA->getName() == "ball")
+                    forceDir*=-1;
+
+                    if(userPointerA)
                     {
-                        std::cout << "ball collides A!" << std::endl;
+                        Ogre::SceneNode* snA = static_cast<Ogre::SceneNode*>(userPointerA);
+
+                        if(snA->getName() == "ball")
+                        {
+                            std::cout << "ball collides A!" << std::endl;
+                        }
+                    }
+
+                    if(userPointerB)
+                    {
+                        Ogre::SceneNode* snB = static_cast<Ogre::SceneNode*>(userPointerB);
+
+                        if(snB->getName() == "ball")
+                        {
+                            std::cout << "ball collides B!" << std::endl;
+                        }
                     }
                 }
 
-                if(userPointerB)
-                {
-                    Ogre::SceneNode* snB = static_cast<Ogre::SceneNode*>(userPointerB);
 
-                    if(snB->getName() == "ball")
-                    {
-                        std::cout << "ball collides B!" << std::endl;
-                    }
-                }
             }
         }
 
@@ -103,7 +124,7 @@ void PhysicsWorld::move(void)
 
                 if(sn->getName() == "ball")
                 {
-                    body->applyForce(btVector3(forceDir * 100,0,0), btVector3(0,0,0));
+                    body->applyForce(btVector3(forceDir * 25,0,0), btVector3(0,0,0));
                     std::cout << "BALLS!" << std::endl;
 
                 }
