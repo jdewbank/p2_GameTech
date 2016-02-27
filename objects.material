@@ -1,0 +1,24 @@
+material BallMaterial
+ {
+   technique
+   {
+     pass
+     {
+       ambient  0.1 0.1 0.1 1.0
+       diffuse  1.0 0.0 0.0 1.0
+     } 
+   }
+ }
+material PaddleMaterial
+ {
+   technique
+   {
+     pass
+     {
+       ambient  0.0 0.5 0.0 0.5
+       diffuse  0.2 0.5 0.2 0.5
+       emissive 0.0 0.5 0.0 0.5
+      scene_blend alpha_blend
+     } 
+   }
+ }

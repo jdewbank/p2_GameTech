@@ -6,7 +6,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
     world = phys;
 
     Ogre::Entity* ball = scnMgr->createEntity("sphere.mesh"); 
-    // ball->setMaterialName("BallColor/CubeMap"); 
+    ball->setMaterialName("BallMaterial"); 
 
     ball->setCastShadows(true); 
     rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("ball"); 

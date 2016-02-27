@@ -29,14 +29,14 @@ Application::~Application(void)
 //---------------------------------------------------------------------------
 void Application::createScene(void)
 {
-    mSceneMgr->setAmbientLight(Ogre::ColourValue(1, 0, 0));
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     //Set up Physics
     mPhysics = new PhysicsWorld();
 
     //Lights
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(100, 0, 0);
+    light->setPosition(0, 50, 200);
 
     mCamera->setPolygonMode(Ogre::PM_WIREFRAME);
 

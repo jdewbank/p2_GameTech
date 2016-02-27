@@ -5,7 +5,7 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     world = phys;
 
     Ogre::Entity* paddle = scnMgr->createEntity("cube.mesh"); 
-    // paddle->setMaterialName("PaddleColor/CubeMap"); 
+    paddle->setMaterialName("PaddleMaterial"); 
 
     paddle->setCastShadows(true); 
     paddleNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle"); 
