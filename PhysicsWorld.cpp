@@ -43,8 +43,10 @@ void PhysicsWorld::detectCollisions(void)
     for(int i = 0; i < numManifolds; ++i) 
     {
         btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-        btCollisionObject* objectA = const_cast<btCollisionObject*>(contactManifold->getBody0());
-        btCollisionObject* objectB = const_cast<btCollisionObject*>(contactManifold->getBody1());
+        btCollisionObject* objectA = const_cast<btCollisionObject*>
+          ((btCollisionObject*)contactManifold->getBody0());
+        btCollisionObject* objectB = const_cast<btCollisionObject*>
+          ((btCollisionObject*)contactManifold->getBody1());
 
         void* userPointerA = objectA->getUserPointer();
         void* userPointerB = objectB->getUserPointer();
