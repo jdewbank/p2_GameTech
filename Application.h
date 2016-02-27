@@ -36,6 +36,7 @@ protected:
   PlayingField* mField;
   Paddle* mPaddle;
   PhysicsWorld* mPhysics;
+  int movementCommands[4];
   virtual void createScene(void);
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 };

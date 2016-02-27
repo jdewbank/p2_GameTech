@@ -31,7 +31,7 @@ public:
     void addCollisionShape(btCollisionShape*);
     void stepSimulation(btScalar);
     void detectCollisions(void);
-    void move(void);
+    void move(int[], float);
 };
 
 #endif // #ifndef __PhysicsWorld_h_

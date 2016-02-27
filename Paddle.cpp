@@ -41,6 +41,8 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     paddleRB->setUserPointer(paddleNode);
     paddleRB->setLinearFactor(btVector3(1,1,0));
     paddleRB->setAngularFactor(btVector3(0,0,0));
+    //body->setCollisionFlags( cmesh->actor->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+    paddleRB->setActivationState( DISABLE_DEACTIVATION );
 
     world->addRigidBodyToDynamicsWorld(paddleRB);
     

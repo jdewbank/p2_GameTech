@@ -38,8 +38,10 @@ void Application::createScene(void)
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     light->setPosition(100, 0, 0);
 
+    mCamera->setPolygonMode(Ogre::PM_WIREFRAME);
+
     //Camera
-    mCamera->setPosition(0, 0, 200);
+    mCamera->setPosition(0, 0, 350);
 
     //Sphere
     mBall = new Ball(mSceneMgr, mPhysics);
@@ -67,7 +69,27 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             return super;
 
         mPhysics->stepSimulation(evt.timeSinceLastFrame);
-        mPhysics->move();
+        if (mKeyboard->isKeyDown(OIS::KC_W)) 
+        {
+            //std::cout << "Move up" << std::endl;
+            movementCommands[0] = 1;
+        } else movementCommands[0] = 0;
+        if (mKeyboard->isKeyDown(OIS::KC_A))
+        {
+            //std::cout << "Move left" << std::endl;
+            movementCommands[1] = 1;
+        } else movementCommands[1] = 0;
+        if (mKeyboard->isKeyDown(OIS::KC_S))
+        {
+            //std::cout << "Move right" << std::endl;
+            movementCommands[2] = 1;
+        } else movementCommands[2] = 0;
+        if (mKeyboard->isKeyDown(OIS::KC_D))
+        {
+            //std::cout << "Move down" << std::endl;
+            movementCommands[3] = 1;
+        } else movementCommands[3] = 0;
+        mPhysics->move(movementCommands, evt.timeSinceLastFrame);
 
     }
 

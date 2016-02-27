@@ -77,7 +77,7 @@ void PhysicsWorld::detectCollisions(void)
 
                         if(snA->getName() == "ball")
                         {
-                            std::cout << "ball collides A!" << std::endl;
+                            //std::cout << "ball collides A!" << std::endl;
                         }
                     }
 
@@ -87,7 +87,7 @@ void PhysicsWorld::detectCollisions(void)
 
                         if(snB->getName() == "ball")
                         {
-                            std::cout << "ball collides B!" << std::endl;
+                            //std::cout << "ball collides B!" << std::endl;
                         }
                     }
                 }
@@ -99,7 +99,7 @@ void PhysicsWorld::detectCollisions(void)
     }
 }
 
-void PhysicsWorld::move(void)
+void PhysicsWorld::move(int moveCommands[], float frameTime)
 {
 
     detectCollisions();
@@ -132,7 +132,40 @@ void PhysicsWorld::move(void)
                 } else if(sn->getName() == "paddle")
                 {
                     //std::cout << "PADDLE!" << std::endl;
+                    btTransform newTrans = transform;
+                    float paddleMoveSpeed = 0.06f;
+                    if(moveCommands[0]) {
+                        //std::cout << "Move up" << std::endl;
+                        if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed, 0));
+                        }
 
+                    }
+                    if(moveCommands[1]) {
+                        //std::cout << "Move left" << std::endl;
+                        if(newTrans.getOrigin().getX() > (-100.0f + 40.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(-paddleMoveSpeed, 0, 0));
+                        }
+                    }
+                    if(moveCommands[2]) {
+                        //std::cout << "Move down" << std::endl;
+                        if(newTrans.getOrigin().getY() > (-100.0f + 30.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(0, -paddleMoveSpeed, 0));
+                        }
+                    }
+                    if(moveCommands[3]) {
+                        //std::cout << "Move right" << std::endl;
+                        if(newTrans.getOrigin().getX() < (100.0f - 40.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(paddleMoveSpeed, 0, 0));
+                        }
+                    }
+
+                    body->getMotionState()->setWorldTransform(newTrans);
+                    //body->getMotionState()->getWorldTransform(transform);
+                    //btVector3 tempOrigin = transform.getOrigin();
+                    body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
+                    //std::cout << "Moving paddle transform to (" << tempOrigin.getX() << ", " << tempOrigin.getY() << ", " << tempOrigin.getZ() << ")\n";
+                    //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
                 }
                     
                 sn->setPosition(Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ()));
