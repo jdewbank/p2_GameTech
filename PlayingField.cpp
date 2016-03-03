@@ -7,8 +7,10 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btScalar planeMass(0.);
     btVector3 localPlaneInertia(0,0,0);
 
-    btScalar wallRestitution(.75f);
-    btScalar groundRestitution(.75f);
+    btScalar wallRestitution(1.0f);
+    btScalar groundRestitution(1.0f);
+
+    std::string materialName = "Examples/Rockwall";
 
     //Negative X plane
     Ogre::Plane negXplane(Ogre::Vector3::UNIT_X, -cSizeWHL.x/2.0f);
@@ -25,7 +27,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negX);
 
     negX->setCastShadows(false);
-    negX->setMaterialName("Examples/Rockwall");
+    negX->setMaterialName(materialName);
 
     {
         btTransform groundTransform;
@@ -62,7 +64,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posX);
 
     posX->setCastShadows(false);
-    posX->setMaterialName("Examples/Rockwall");
+    posX->setMaterialName(materialName);
 
     {
         btTransform groundTransform;
@@ -97,7 +99,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posY);
 
     posY->setCastShadows(false);
-    posY->setMaterialName("Examples/Rockwall");
+    posY->setMaterialName(materialName);
 
 
     {
@@ -133,7 +135,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negY);
 
     negY->setCastShadows(false);
-    negY->setMaterialName("Examples/Rockwall");
+    negY->setMaterialName(materialName);
     
     {
         btTransform groundTransform;
@@ -169,7 +171,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negZ);
 
     negZ->setCastShadows(false);
-    negZ->setMaterialName("Examples/Rockwall");
+    negZ->setMaterialName(materialName);
 
     {
         btTransform groundTransform;
@@ -204,7 +206,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posZ);
 
     posZ->setCastShadows(false);
-    posZ->setMaterialName("Examples/Rockwall");
+    posZ->setMaterialName(materialName);
 
     {
         btTransform groundTransform;

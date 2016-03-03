@@ -38,7 +38,7 @@ void Application::createScene(void)
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     light->setPosition(0, 50, 200);
 
-    mCamera->setPolygonMode(Ogre::PM_WIREFRAME);
+    // mCamera->setPolygonMode(Ogre::PM_SOLID);
 
     //Camera
     mCamera->setPosition(0, 0, 350);
@@ -68,28 +68,49 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         if(mPhysics == NULL)
             return super;
 
-        mPhysics->stepSimulation(evt.timeSinceLastFrame);
-        if (mKeyboard->isKeyDown(OIS::KC_W)) 
+        //TRANSLATION
+        if (mKeyboard->isKeyDown(OIS::KC_W)) // up 
         {
-            //std::cout << "Move up" << std::endl;
             movementCommands[0] = 1;
         } else movementCommands[0] = 0;
-        if (mKeyboard->isKeyDown(OIS::KC_A))
+
+        if (mKeyboard->isKeyDown(OIS::KC_A)) // left
         {
-            //std::cout << "Move left" << std::endl;
             movementCommands[1] = 1;
         } else movementCommands[1] = 0;
-        if (mKeyboard->isKeyDown(OIS::KC_S))
+
+        if (mKeyboard->isKeyDown(OIS::KC_S)) // down
         {
-            //std::cout << "Move right" << std::endl;
             movementCommands[2] = 1;
         } else movementCommands[2] = 0;
-        if (mKeyboard->isKeyDown(OIS::KC_D))
+        
+        if (mKeyboard->isKeyDown(OIS::KC_D)) // right
         {
-            //std::cout << "Move down" << std::endl;
             movementCommands[3] = 1;
         } else movementCommands[3] = 0;
-        mPhysics->move(movementCommands, evt.timeSinceLastFrame);
+
+        //ROTATION
+        if (mKeyboard->isKeyDown(OIS::KC_UP)) // up 
+        {
+            rotationCommands[0] = 1;
+        } else rotationCommands[0] = 0;
+
+        if (mKeyboard->isKeyDown(OIS::KC_LEFT)) // left
+        {
+            rotationCommands[1] = 1;
+        } else rotationCommands[1] = 0;
+
+        if (mKeyboard->isKeyDown(OIS::KC_DOWN)) // down
+        {
+            rotationCommands[2] = 1;
+        } else rotationCommands[2] = 0;
+        
+        if (mKeyboard->isKeyDown(OIS::KC_RIGHT)) // right
+        {
+            rotationCommands[3] = 1;
+        } else rotationCommands[3] = 0;
+
+        mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
 
     }
 

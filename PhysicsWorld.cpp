@@ -7,8 +7,8 @@ PhysicsWorld::PhysicsWorld(void)
     overlappingPairCache = new btDbvtBroadphase();
     solver = new btSequentialImpulseConstraintSolver();
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0,0,0));
-    forceDir = 1.0f;
+    dynamicsWorld->setGravity(btVector3(0,-10,0));
+
     collisionIgnoreTimer = 20;
 }
 
@@ -21,11 +21,6 @@ void PhysicsWorld::addRigidBodyToDynamicsWorld(btRigidBody* rb)
 void PhysicsWorld::addCollisionShape(btCollisionShape* cs)
 {
     collisionShapes.push_back(cs);
-}
-
-void PhysicsWorld::stepSimulation(btScalar ts)
-{
-    dynamicsWorld->stepSimulation(ts);
 }
 
 void PhysicsWorld::detectCollisions(void) 
@@ -71,8 +66,6 @@ void PhysicsWorld::detectCollisions(void)
                     collisionIgnoreTimer--;
                     //collisionIgnore = true;
 
-                    forceDir*=-1;
-
                     if(userPointerA)
                     {
                         Ogre::SceneNode* snA = static_cast<Ogre::SceneNode*>(userPointerA);
@@ -101,10 +94,13 @@ void PhysicsWorld::detectCollisions(void)
     }
 }
 
-void PhysicsWorld::move(int moveCommands[], float frameTime)
+void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar frameTime)
 {
 
+    dynamicsWorld->stepSimulation(frameTime);
+
     detectCollisions();
+
     //std::cout << collisionShapes.size() << std::endl;
     for(int i = 0; i < collisionShapes.size(); ++i)
     {
@@ -128,38 +124,77 @@ void PhysicsWorld::move(int moveCommands[], float frameTime)
 
                 if(sn->getName() == "ball")
                 {
-                    body->applyForce(btVector3(0,0,forceDir * 10), btVector3(0,0,0));
+
+                    // body->applyForce(btVector3(0,0,forceDir * 10), btVector3(0,0,0));
                     //std::cout << "BALLS!" << std::endl;
 
-                } else if(sn->getName() == "paddle")
+                } 
+                else if(sn->getName() == "paddle")
                 {
-                    //std::cout << "PADDLE!" << std::endl;
+
                     btTransform newTrans = transform;
                     float paddleMoveSpeed = 0.06f;
-                    if(moveCommands[0]) {
-                        //std::cout << "Move up" << std::endl;
+
+                    //TRANSLATION
+                    // up
+                    if(paddleTranslate[0]) {
                         if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f)) {
                             newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed, 0));
                         }
 
                     }
-                    if(moveCommands[1]) {
-                        //std::cout << "Move left" << std::endl;
+
+                    // left
+                    if(paddleTranslate[1]) {
                         if(newTrans.getOrigin().getX() > (-100.0f + 40.0f/2.0f)) {
                             newTrans.getOrigin() += (btVector3(-paddleMoveSpeed, 0, 0));
                         }
                     }
-                    if(moveCommands[2]) {
-                        //std::cout << "Move down" << std::endl;
+
+                    // down
+                    if(paddleTranslate[2]) {
                         if(newTrans.getOrigin().getY() > (-100.0f + 30.0f/2.0f)) {
                             newTrans.getOrigin() += (btVector3(0, -paddleMoveSpeed, 0));
                         }
                     }
-                    if(moveCommands[3]) {
-                        //std::cout << "Move right" << std::endl;
+
+                    //right
+                    if(paddleTranslate[3]) {
                         if(newTrans.getOrigin().getX() < (100.0f - 40.0f/2.0f)) {
                             newTrans.getOrigin() += (btVector3(paddleMoveSpeed, 0, 0));
                         }
+                    }
+
+                    btScalar rotationSpeed = 1.0f;
+
+                    // std::cout << "ROTATE!" << std::endl;
+                    
+                    // ROTATION
+                    // up
+                    if(paddleRotate[0]) {
+                        btQuaternion rotation = newTrans.getRotation();
+                        rotation += btQuaternion(0,rotationSpeed,0);
+                        newTrans.setRotation(rotation);
+                    }
+                    // left
+                    if(paddleRotate[1]) {
+                        btQuaternion rotation = newTrans.getRotation();
+                        rotation += btQuaternion(rotationSpeed,0,0);
+                        newTrans.setRotation(rotation);
+                    }
+
+                    // down
+                    if(paddleRotate[2]) {
+                        btQuaternion rotation = newTrans.getRotation();
+                        rotation += btQuaternion(0,-rotationSpeed,0);
+                        newTrans.setRotation(rotation);
+                    }
+
+                    //right
+                    if(paddleRotate[3]){
+                        btQuaternion rotation = newTrans.getRotation();
+                        rotation += btQuaternion(-rotationSpeed,0,0);
+                        newTrans.setRotation(rotation);
                     }
 
                     body->getMotionState()->setWorldTransform(newTrans);

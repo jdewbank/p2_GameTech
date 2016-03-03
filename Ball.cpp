@@ -43,7 +43,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
 
     world->addRigidBodyToDynamicsWorld(ballRB);
     
-    //trackrigidbodywithname?
+    ballRB->applyForce(btVector3(0,0,3000), btVector3(0,0,0));
 
 } 
 

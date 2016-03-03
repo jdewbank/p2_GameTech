@@ -30,6 +30,9 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
 
     startTransform.setOrigin(btVector3(0,0,fieldSize/2 - 10));
 
+    //left/right, forward/back, spin
+    startTransform.setRotation(btQuaternion(0,0,0));
+
     paddleShape->calculateLocalInertia(mass, inertia);
 
     btDefaultMotionState* paddleMotionState = new btDefaultMotionState(startTransform);
