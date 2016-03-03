@@ -35,6 +35,8 @@ http://www.ogre3d.org/wiki/
 
 #  include <OGRE/SdkTrays.h>
 #  include <OGRE/SdkCameraMan.h>
+
+#  include <SDL_mixer.h>
 #else
 #  include <OISEvents.h>
 #  include <OISInputManager.h>
@@ -43,6 +45,8 @@ http://www.ogre3d.org/wiki/
 
 #  include <SdkTrays.h>
 #  include <SdkCameraMan.h>
+
+#  include <SDL_mixer.h>
 #endif
 
 #ifdef OGRE_STATIC_LIB
