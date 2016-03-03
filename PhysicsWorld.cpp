@@ -7,9 +7,10 @@ PhysicsWorld::PhysicsWorld(void)
     overlappingPairCache = new btDbvtBroadphase();
     solver = new btSequentialImpulseConstraintSolver();
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0,-10,0));
+    dynamicsWorld->setGravity(btVector3(0,0,40));
 
     collisionIgnoreTimer = 20;
+    paddlePosition = Ogre::Vector3(0,0,0);
 }
 
 
@@ -124,16 +125,16 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
 
                 if(sn->getName() == "ball")
                 {
-
-                    // body->applyForce(btVector3(0,0,forceDir * 10), btVector3(0,0,0));
-                    //std::cout << "BALLS!" << std::endl;
-
+                    //Ball's behavior
                 } 
                 else if(sn->getName() == "paddle")
                 {
 
-                    btTransform newTrans = transform;
                     float paddleMoveSpeed = 0.06f;
+                    btScalar rotationSpeed = .005f;
+
+
+                    btTransform newTrans = transform;
 
                     //TRANSLATION
                     // up
@@ -146,8 +147,8 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
 
                     // left
                     if(paddleTranslate[1]) {
-                        if(newTrans.getOrigin().getX() > (-100.0f + 40.0f/2.0f)) {
-                            newTrans.getOrigin() += (btVector3(-paddleMoveSpeed, 0, 0));
+                        if(newTrans.getOrigin().getX() < (100.0f - 40.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(paddleMoveSpeed, 0, 0));
                         }
                     }
 
@@ -160,42 +161,50 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
 
                     //right
                     if(paddleTranslate[3]) {
-                        if(newTrans.getOrigin().getX() < (100.0f - 40.0f/2.0f)) {
-                            newTrans.getOrigin() += (btVector3(paddleMoveSpeed, 0, 0));
+                        if(newTrans.getOrigin().getX() > (-100.0f + 40.0f/2.0f)) {
+                            newTrans.getOrigin() += (btVector3(-paddleMoveSpeed, 0, 0));
                         }
                     }
 
-                    btScalar rotationSpeed = 1.0f;
 
-                    // std::cout << "ROTATE!" << std::endl;
+
+                    btScalar roll, pitch, yaw;
+                    btQuaternion rotation = newTrans.getRotation();
+                    btMatrix3x3(rotation).getEulerYPR(yaw,pitch,roll);
                     
+
                     // ROTATION
                     // up
-                    if(paddleRotate[0]) {
-                        btQuaternion rotation = newTrans.getRotation();
-                        rotation += btQuaternion(0,rotationSpeed,0);
-                        newTrans.setRotation(rotation);
+                    if(paddleRotate[0] && roll < 1) {
+                        roll += rotationSpeed;
                     }
                     // left
-                    if(paddleRotate[1]) {
-                        btQuaternion rotation = newTrans.getRotation();
-                        rotation += btQuaternion(rotationSpeed,0,0);
-                        newTrans.setRotation(rotation);
+                    if(paddleRotate[1] && pitch > -1) {
+                        pitch -= rotationSpeed;
                     }
 
                     // down
-                    if(paddleRotate[2]) {
-                        btQuaternion rotation = newTrans.getRotation();
-                        rotation += btQuaternion(0,-rotationSpeed,0);
-                        newTrans.setRotation(rotation);
+                    if(paddleRotate[2] && roll > -1) {
+                        roll -= rotationSpeed;
                     }
 
                     //right
-                    if(paddleRotate[3]){
-                        btQuaternion rotation = newTrans.getRotation();
-                        rotation += btQuaternion(-rotationSpeed,0,0);
-                        newTrans.setRotation(rotation);
+                    if(paddleRotate[3] && pitch < 1){
+                        pitch += rotationSpeed;
                     }
+
+                    //reset
+                    if(paddleRotate[4]){
+                        pitch = 0;
+                        roll = 0;
+                        yaw = 0;
+                    }
+
+
+                    btQuaternion tmp;
+                    tmp.setEulerZYX(yaw,pitch,roll);
+
+                    newTrans.setRotation(tmp);
 
                     body->getMotionState()->setWorldTransform(newTrans);
                     //body->getMotionState()->getWorldTransform(transform);
@@ -205,7 +214,8 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
                 }
                     
-                sn->setPosition(Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ()));
+                paddlePosition = Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ());
+                sn->setPosition(paddlePosition);
                 sn->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
             }
         }

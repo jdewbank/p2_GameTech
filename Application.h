@@ -37,7 +37,7 @@ protected:
   Paddle* mPaddle;
   PhysicsWorld* mPhysics;
   int movementCommands[4];
-  int rotationCommands[4];
+  int rotationCommands[5];
   virtual void createScene(void);
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 };

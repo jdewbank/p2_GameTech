@@ -26,6 +26,7 @@ Ball::Ball(Ogre::SceneManager* scnMgr, PhysicsWorld* phys) {
     btTransform startTransform;
     startTransform.setIdentity();
 
+
     btScalar mass(.1f);
     btVector3 inertia(0,0,0);
 

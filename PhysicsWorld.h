@@ -26,6 +26,8 @@ protected:
     int collisionIgnoreTimer;
 
 public:
+    Ogre::Vector3 paddlePosition;
+
     PhysicsWorld(void);
     void addRigidBodyToDynamicsWorld(btRigidBody*);
     void addCollisionShape(btCollisionShape*);

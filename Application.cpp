@@ -36,12 +36,13 @@ void Application::createScene(void)
 
     //Lights
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(0, 50, 200);
+    light->setPosition(0, -50, -200);
 
     // mCamera->setPolygonMode(Ogre::PM_SOLID);
 
     //Camera
-    mCamera->setPosition(0, 0, 350);
+    mCamera->setPosition(0, -250, -100);
+    mCamera->lookAt(0, 0, 0);
 
     //Sphere
     mBall = new Ball(mSceneMgr, mPhysics);
@@ -108,9 +109,18 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         if (mKeyboard->isKeyDown(OIS::KC_RIGHT)) // right
         {
             rotationCommands[3] = 1;
-        } else rotationCommands[3] = 0;
+        } else rotationCommands[3] = 0;        
+
+        if (mKeyboard->isKeyDown(OIS::KC_SPACE)) // reset
+        {
+            rotationCommands[4] = 1;
+        } else rotationCommands[4] = 0;
 
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
+
+
+        mCamera->setPosition(mPhysics->paddlePosition.x, mPhysics->paddlePosition.y-250, mPhysics->paddlePosition.z -200);
+        mCamera->lookAt(mPhysics->paddlePosition);
 
     }
 
