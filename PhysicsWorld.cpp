@@ -97,7 +97,6 @@ void PhysicsWorld::detectCollisions(void)
 
 void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar frameTime)
 {
-
     dynamicsWorld->stepSimulation(frameTime);
 
     detectCollisions();
@@ -117,22 +116,22 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
             void* userPointer = body->getUserPointer();
             if(userPointer)
             {
-                btQuaternion orientation = transform.getRotation();
-                btVector3 origin = transform.getOrigin();
 
                 Ogre::SceneNode* sn = static_cast<Ogre::SceneNode*>(userPointer);
 
+                btVector3    origin = transform.getOrigin();
+                btQuaternion orientation = transform.getRotation();
 
                 if(sn->getName() == "ball")
                 {
                     //Ball's behavior
                 } 
+
                 else if(sn->getName() == "paddle")
                 {
 
                     float paddleMoveSpeed = 0.06f;
                     btScalar rotationSpeed = .005f;
-
 
                     btTransform newTrans = transform;
 
@@ -142,7 +141,6 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                         if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f)) {
                             newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed, 0));
                         }
-
                     }
 
                     // left
@@ -166,12 +164,9 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                         }
                     }
 
-
-
                     btScalar roll, pitch, yaw;
                     btQuaternion rotation = newTrans.getRotation();
                     btMatrix3x3(rotation).getEulerYPR(yaw,pitch,roll);
-                    
 
                     // ROTATION
                     // up
@@ -200,21 +195,27 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                         yaw = 0;
                     }
 
+                    
+                    //btMatrix3x3 ypr;
+                    //ypr.setEulerYPR(yaw,pitch,roll);
+                    //newTrans.setBasis(ypr); //set new rotation for the object
 
                     btQuaternion tmp;
                     tmp.setEulerZYX(yaw,pitch,roll);
-
                     newTrans.setRotation(tmp);
 
                     body->getMotionState()->setWorldTransform(newTrans);
                     //body->getMotionState()->getWorldTransform(transform);
                     //btVector3 tempOrigin = transform.getOrigin();
                     body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
+                    body->setCenterOfMassTransform(newTrans);
                     //std::cout << "Moving paddle transform to (" << tempOrigin.getX() << ", " << tempOrigin.getY() << ", " << tempOrigin.getZ() << ")\n";
                     //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
+                    
                 }
                     
-                paddlePosition = Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ());
+                paddlePosition = Ogre::Vector3(
+                    origin.getX(), origin.getY(), origin.getZ());
                 sn->setPosition(paddlePosition);
                 sn->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
             }
