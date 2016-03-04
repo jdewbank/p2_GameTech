@@ -7,6 +7,7 @@ SoundPlayer::SoundPlayer(void)
 	sfx_hit = Mix_LoadWAV("sfx_hit.wav");
 	sfx_wall= Mix_LoadWAV("sfx_wall.wav");
 	sfx_miss= Mix_LoadWAV("sfx_miss.wav");
+	mute = 0;
 }
 
 SoundPlayer::~SoundPlayer(void)
@@ -27,4 +28,4 @@ void SoundPlayer::playSound(int sfx_id)
 	if(!mute) Mix_PlayChannel( -1, sfx, 0 );
 }
 
-void SoundPlayer::toggleSound() {mute = ~mute;}
+void SoundPlayer::toggleSound() {mute = !mute;}

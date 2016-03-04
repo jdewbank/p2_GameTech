@@ -43,6 +43,7 @@ protected:
   int rotationCommands[5];
   virtual void createScene(void);
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+  virtual bool keyPressed( const OIS::KeyEvent &arg );
 };
 
 

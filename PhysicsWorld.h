@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 
+#include "SoundPlayer.h"
 
 class PhysicsWorld
 {
@@ -20,8 +21,11 @@ protected:
 	btBroadphaseInterface* overlappingPairCache;
 	btSequentialImpulseConstraintSolver* solver;
     btDiscreteDynamicsWorld* dynamicsWorld;
+
 	std::vector<btCollisionShape *> collisionShapes;
 	std::map<std::string, btRigidBody *> physicsAccessors;
+
+    SoundPlayer* physSound;
 
     int collisionIgnoreTimer;
 
@@ -33,6 +37,9 @@ public:
     void addCollisionShape(btCollisionShape*);
     void detectCollisions(void);
     void move(int[], int[], btScalar);
+    
+    void setSoundPlayer(SoundPlayer* sound) 
+    { physSound = sound; };
 };
 
 #endif // #ifndef __PhysicsWorld_h_

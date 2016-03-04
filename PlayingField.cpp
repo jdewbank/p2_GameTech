@@ -2,13 +2,16 @@
 
 PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, PhysicsWorld* phys) {
     cSizeWHL = Ogre::Vector3(whl.x, whl.y, whl.z);
+
     world = phys;
 
     btScalar planeMass(0.);
     btVector3 localPlaneInertia(0,0,0);
 
     btScalar wallRestitution(0.8f);
-    btScalar groundRestitution(1.0f);
+    btScalar groundRestitution(1.25f);
+
+    rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("room");
 
     std::string materialName = "Examples/Rockwall";
 
@@ -24,7 +27,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* negX = scnMgr->createEntity("negX");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negX);
+    rootNode->createChildSceneNode()->attachObject(negX);
 
     negX->setCastShadows(false);
     negX->setMaterialName(materialName);
@@ -61,7 +64,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* posX = scnMgr->createEntity("posX");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posX);
+    rootNode->createChildSceneNode()->attachObject(posX);
 
     posX->setCastShadows(false);
     posX->setMaterialName(materialName);
@@ -96,7 +99,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* posY = scnMgr->createEntity("posY");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posY);
+    rootNode->createChildSceneNode()->attachObject(posY);
 
     posY->setCastShadows(false);
     posY->setMaterialName(materialName);
@@ -132,7 +135,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* negY = scnMgr->createEntity("negY");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negY);
+    rootNode->createChildSceneNode()->attachObject(negY);
 
     negY->setCastShadows(false);
     negY->setMaterialName(materialName);
@@ -150,7 +153,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         btRigidBody::btRigidBodyConstructionInfo groundRBInfo(planeMass, groundMotionState, groundShape, localPlaneInertia);
         btRigidBody* groundBody = new btRigidBody(groundRBInfo);
 
-        groundBody->setRestitution(groundRestitution);
+        groundBody->setRestitution(wallRestitution);
 
         world->addRigidBodyToDynamicsWorld(groundBody);
     }
@@ -168,7 +171,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_X);
 
     Ogre::Entity* negZ = scnMgr->createEntity("negZ");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(negZ);
+    rootNode->createChildSceneNode()->attachObject(negZ);
 
     negZ->setCastShadows(false);
     negZ->setMaterialName(materialName);
@@ -203,7 +206,8 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         Ogre::Vector3::UNIT_X);
 
     Ogre::Entity* posZ = scnMgr->createEntity("posZ");
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(posZ);
+    Ogre::SceneNode* floorNode = rootNode->createChildSceneNode("floor");
+    floorNode->attachObject(posZ);
 
     posZ->setCastShadows(false);
     posZ->setMaterialName(materialName);
@@ -221,7 +225,8 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         btRigidBody::btRigidBodyConstructionInfo groundRBInfo(planeMass, groundMotionState, groundShape, localPlaneInertia);
         btRigidBody* groundBody = new btRigidBody(groundRBInfo);
 
-        groundBody->setRestitution(wallRestitution);
+        groundBody->setRestitution(groundRestitution);
+        groundBody->setUserPointer(floorNode);
 
         world->addRigidBodyToDynamicsWorld(groundBody);
     }

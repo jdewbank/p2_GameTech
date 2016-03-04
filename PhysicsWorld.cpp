@@ -69,29 +69,38 @@ void PhysicsWorld::detectCollisions(void)
 
                     if(userPointerA)
                     {
-                        Ogre::SceneNode* snA = static_cast<Ogre::SceneNode*>(userPointerA);
-
-                        if(snA->getName() == "ball")
+                        Ogre::SceneNode* snA = static_cast
+                            <Ogre::SceneNode*>(userPointerA);
+                        //std::cout << "A is " << snA->getName() << std::endl;
+                        if(userPointerB)
                         {
-                            //std::cout << "ball collides A!" << std::endl;
+                            Ogre::SceneNode* snB = static_cast
+                                <Ogre::SceneNode*>(userPointerB);
+                            //std::cout << "B is " << snB->getName() << std::endl;
+                            
+                            if (snA->getName() == "floor" ||
+                                snB->getName() == "floor" )
+                            {
+                                // Floor collision
+                                physSound->playSound(2);
+                            }
+                            else if (
+                                snA->getName() == "paddle" ||
+                                snB->getName() == "paddle" )
+                            {
+                                // Paddle collision
+                                physSound->playSound(1);
+                            }      
                         }
-                    }
-
-                    if(userPointerB)
-                    {
-                        Ogre::SceneNode* snB = static_cast<Ogre::SceneNode*>(userPointerB);
-
-                        if(snB->getName() == "ball")
+                        else 
                         {
-                            //std::cout << "ball collides B!" << std::endl;
+                            // Wall collision
+                            physSound->playSound(0);  
                         }
                     }
                 }
-
-
             }
         }
-
     }
 }
 
@@ -194,21 +203,15 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                         roll = 0;
                         yaw = 0;
                     }
-
                     
-                    //btMatrix3x3 ypr;
-                    //ypr.setEulerYPR(yaw,pitch,roll);
-                    //newTrans.setBasis(ypr); //set new rotation for the object
-
                     btQuaternion tmp;
                     tmp.setEulerZYX(yaw,pitch,roll);
                     newTrans.setRotation(tmp);
 
                     body->getMotionState()->setWorldTransform(newTrans);
-                    //body->getMotionState()->getWorldTransform(transform);
-                    //btVector3 tempOrigin = transform.getOrigin();
                     body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                     body->setCenterOfMassTransform(newTrans);
+                    
                     //std::cout << "Moving paddle transform to (" << tempOrigin.getX() << ", " << tempOrigin.getY() << ", " << tempOrigin.getZ() << ")\n";
                     //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
                     

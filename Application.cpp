@@ -60,6 +60,7 @@ void Application::createScene(void)
 
     //Sounds
     mSound = new SoundPlayer(); 
+    mPhysics->setSoundPlayer(mSound);
 }
 
 
@@ -97,6 +98,16 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
     return super;
 }
 
+bool Application::keyPressed( const OIS::KeyEvent &arg )
+{
+    bool super = BaseApplication::keyPressed( arg );
+    
+    if (arg.key == OIS::KC_M)
+    {
+        mSound->toggleSound();
+    }
+    return super;
+}
 
 //---------------------------------------------------------------------------
 
