@@ -38,25 +38,25 @@ void Application::createScene(void)
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     light->setPosition(0, -50, -200);
 
-    // mCamera->setPolygonMode(Ogre::PM_SOLID);
+    //Shadows
+    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
 
     //Camera
-    mCamera->setPosition(0, -250, -100);
+    mCamera->setPosition(0, -350, -200);
     mCamera->lookAt(0, 0, 0);
 
     //Sphere
     mBall = new Ball(mSceneMgr, mPhysics);
 
-
     Ogre::Real fieldSize = 200;
+
     //Paddle
     Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
     mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics);
 
-
-    //PlayingField
-    
-    mField = new PlayingField(mSceneMgr, Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
+    //PlayingField    
+    mField = new PlayingField(mSceneMgr, 
+        Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
 }
 
 
@@ -70,60 +70,27 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             return super;
 
         //TRANSLATION
-        if (mKeyboard->isKeyDown(OIS::KC_W)) // up 
-        {
-            movementCommands[0] = 1;
-        } else movementCommands[0] = 0;
-
-        if (mKeyboard->isKeyDown(OIS::KC_A)) // left
-        {
-            movementCommands[1] = 1;
-        } else movementCommands[1] = 0;
-
-        if (mKeyboard->isKeyDown(OIS::KC_S)) // down
-        {
-            movementCommands[2] = 1;
-        } else movementCommands[2] = 0;
+        movementCommands[0] = mKeyboard->isKeyDown(OIS::KC_W)? 1:0; // up 
+        movementCommands[1] = mKeyboard->isKeyDown(OIS::KC_A)? 1:0; // left
+        movementCommands[2] = mKeyboard->isKeyDown(OIS::KC_S)? 1:0; // down
+        movementCommands[3] = mKeyboard->isKeyDown(OIS::KC_D)? 1:0; // right
         
-        if (mKeyboard->isKeyDown(OIS::KC_D)) // right
-        {
-            movementCommands[3] = 1;
-        } else movementCommands[3] = 0;
-
         //ROTATION
-        if (mKeyboard->isKeyDown(OIS::KC_UP)) // up 
-        {
-            rotationCommands[0] = 1;
-        } else rotationCommands[0] = 0;
-
-        if (mKeyboard->isKeyDown(OIS::KC_LEFT)) // left
-        {
-            rotationCommands[1] = 1;
-        } else rotationCommands[1] = 0;
-
-        if (mKeyboard->isKeyDown(OIS::KC_DOWN)) // down
-        {
-            rotationCommands[2] = 1;
-        } else rotationCommands[2] = 0;
+        rotationCommands[0] = mKeyboard->isKeyDown(OIS::KC_UP   )? 1:0; // up 
+        rotationCommands[1] = mKeyboard->isKeyDown(OIS::KC_LEFT )? 1:0; // left
+        rotationCommands[2] = mKeyboard->isKeyDown(OIS::KC_DOWN )? 1:0; // down
+        rotationCommands[3] = mKeyboard->isKeyDown(OIS::KC_RIGHT)? 1:0; // right
+        rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
-        if (mKeyboard->isKeyDown(OIS::KC_RIGHT)) // right
-        {
-            rotationCommands[3] = 1;
-        } else rotationCommands[3] = 0;        
-
-        if (mKeyboard->isKeyDown(OIS::KC_SPACE)) // reset
-        {
-            rotationCommands[4] = 1;
-        } else rotationCommands[4] = 0;
-
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
 
+        mCamera->setPosition(
+            mPhysics->paddlePosition.x, 
+            mPhysics->paddlePosition.y -250, 
+            mPhysics->paddlePosition.z -200);
 
-        mCamera->setPosition(mPhysics->paddlePosition.x, mPhysics->paddlePosition.y-250, mPhysics->paddlePosition.z -200);
         mCamera->lookAt(mPhysics->paddlePosition);
-
     }
-
     return super;
 }
 
