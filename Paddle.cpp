@@ -40,7 +40,7 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, paddleMotionState, paddleShape, inertia);
     btRigidBody* paddleRB = new btRigidBody(rbInfo);
 
-    paddleRB->setRestitution(1.0);
+    paddleRB->setRestitution(1.5);
     paddleRB->setUserPointer(paddleNode);
     paddleRB->setLinearFactor(btVector3(1,1,0));
     paddleRB->setAngularFactor(btVector3(0,0,0));

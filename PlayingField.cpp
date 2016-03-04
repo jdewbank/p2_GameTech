@@ -7,7 +7,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btScalar planeMass(0.);
     btVector3 localPlaneInertia(0,0,0);
 
-    btScalar wallRestitution(1.0f);
+    btScalar wallRestitution(0.8f);
     btScalar groundRestitution(1.0f);
 
     std::string materialName = "Examples/Rockwall";
