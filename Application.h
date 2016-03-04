@@ -21,7 +21,8 @@ http://www.ogre3d.org/wiki/
 #include "BaseApplication.h"
 #include "Ball.h"
 #include "PlayingField.h"
-#include "Paddle.h" 
+#include "Paddle.h"
+#include "SoundPlayer.h"
 
 //---------------------------------------------------------------------------
 
@@ -36,6 +37,8 @@ protected:
   PlayingField* mField;
   Paddle* mPaddle;
   PhysicsWorld* mPhysics;
+  SoundPlayer* mSound;
+
   int movementCommands[4];
   int rotationCommands[5];
   virtual void createScene(void);

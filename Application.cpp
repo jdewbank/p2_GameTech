@@ -57,6 +57,9 @@ void Application::createScene(void)
     //PlayingField    
     mField = new PlayingField(mSceneMgr, 
         Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
+
+    //Sounds
+    mSound = new SoundPlayer(); 
 }
 
 
