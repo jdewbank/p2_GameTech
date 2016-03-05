@@ -12,6 +12,7 @@
 #include <string>
 
 #include "SoundPlayer.h"
+#include "Scoreboard.h"
 
 class PhysicsWorld
 {
@@ -26,6 +27,7 @@ protected:
 	std::map<std::string, btRigidBody *> physicsAccessors;
 
     SoundPlayer* physSound;
+    Scoreboard * physScore;
 
     int collisionIgnoreTimer;
 
@@ -38,8 +40,10 @@ public:
     void detectCollisions(void);
     void move(int[], int[], btScalar);
     
-    void setSoundPlayer(SoundPlayer* sound) 
-    { physSound = sound; };
+    void setSoundPlayer(SoundPlayer* mSound) 
+    { physSound = mSound; };
+    void setScoreboard(Scoreboard* mScore) 
+    { physScore = mScore; };
 };
 
 #endif // #ifndef __PhysicsWorld_h_

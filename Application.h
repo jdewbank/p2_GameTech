@@ -23,6 +23,7 @@ http://www.ogre3d.org/wiki/
 #include "PlayingField.h"
 #include "Paddle.h"
 #include "SoundPlayer.h"
+#include "Scoreboard.h"
 
 //---------------------------------------------------------------------------
 
@@ -38,6 +39,7 @@ protected:
   Paddle* mPaddle;
   PhysicsWorld* mPhysics;
   SoundPlayer* mSound;
+  Scoreboard* mScore;
 
   int movementCommands[4];
   int rotationCommands[5];

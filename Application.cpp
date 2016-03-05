@@ -61,6 +61,10 @@ void Application::createScene(void)
     //Sounds
     mSound = new SoundPlayer(); 
     mPhysics->setSoundPlayer(mSound);
+
+    //Score
+    mScore = new Scoreboard();
+    mPhysics->setScoreboard();
 }
 
 
@@ -105,6 +109,10 @@ bool Application::keyPressed( const OIS::KeyEvent &arg )
     if (arg.key == OIS::KC_M)
     {
         mSound->toggleSound();
+    }
+    else if (arg.key == OIS::KC_0)
+    {
+        mScore->resetAll();
     }
     return super;
 }

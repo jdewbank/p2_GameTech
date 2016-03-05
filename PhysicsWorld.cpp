@@ -83,6 +83,7 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Floor collision
                                 physSound->playSound(2);
+                                physScore->resetScore();
                             }
                             else if (
                                 snA->getName() == "paddle" ||
@@ -90,14 +91,18 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
+                                physScore->addScore(1);    
                             }      
                         }
                         else 
                         {
                             // Wall collision
-                            physSound->playSound(0);  
+                            physSound->playSound(0);
+                            physScore->addScore(3);
                         }
                     }
+                    std::cout << "Score: " << physScore->getScore() << std::endl;
+                    std::cout << "Best : " << physScore->getBest()  << std::endl;
                 }
             }
         }
