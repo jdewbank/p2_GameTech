@@ -64,7 +64,7 @@ void Application::createScene(void)
 
     //Score
     mScore = new Scoreboard();
-    mPhysics->setScoreboard();
+    mPhysics->setScoreboard(mScore);
 }
 
 
