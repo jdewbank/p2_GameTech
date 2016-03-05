@@ -65,6 +65,13 @@ void Application::createScene(void)
     //Score
     mScore = new Scoreboard();
     mPhysics->setScoreboard(mScore);
+
+    Ogre::StringVector items;
+    items.push_back("Score    :");
+    items.push_back("Highscore:");
+
+    mScorePanel = mTrayMgr->createParamsPanel(
+        OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 2, items);
 }
 
 
@@ -91,7 +98,11 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
-
+        Ogre::String score = Ogre::StringConverter::toString(mScore->getScore());
+        Ogre::String best  = Ogre::StringConverter::toString(mScore->getBest() );
+        mScorePanel->setParamValue(0, score );
+        mScorePanel->setParamValue(1, best  );
+        
         mCamera->setPosition(
             mPhysics->paddlePosition.x, 
             mPhysics->paddlePosition.y -250, 

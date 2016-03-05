@@ -41,6 +41,8 @@ protected:
   SoundPlayer* mSound;
   Scoreboard* mScore;
 
+  OgreBites::ParamsPanel* mScorePanel; 
+
   int movementCommands[4];
   int rotationCommands[5];
   virtual void createScene(void);
