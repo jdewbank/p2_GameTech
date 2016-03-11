@@ -70,8 +70,8 @@ void Application::createScene(void)
     items.push_back("Score    :");
     items.push_back("Highscore:");
 
-    mScorePanel = mTrayMgr->createParamsPanel(
-        OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 2, items);
+    if(mTrayMgr)
+        mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
 }
 
 

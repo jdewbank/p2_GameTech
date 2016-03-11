@@ -2,6 +2,8 @@
 
 Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys) { 
 
+    int paddleHeight = 20;
+
     world = phys;
 
     Ogre::Entity* paddle = scnMgr->createEntity("cube.mesh"); 
@@ -13,7 +15,7 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     paddleNode->attachObject(paddle); 
     paddleNode->scale(paddleSpecs);
 
-    paddleNode->translate(0,0,fieldSize/2 - 30);
+    paddleNode->translate(0,0,fieldSize/2 - paddleHeight);
     
     btScalar paddleX = paddleSpecs.x * 50;
     btScalar paddleY = paddleSpecs.y * 50;
@@ -28,7 +30,7 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     btScalar mass(.0f);
     btVector3 inertia(0,0,0);
 
-    startTransform.setOrigin(btVector3(0,0,fieldSize/2 - 30));
+    startTransform.setOrigin(btVector3(0,0,fieldSize/2 - paddleHeight));
 
     //left/right, forward/back, spin
     startTransform.setRotation(btQuaternion(0,0,0));

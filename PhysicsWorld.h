@@ -30,6 +30,7 @@ protected:
     Scoreboard * physScore;
 
     int collisionIgnoreTimer;
+    bool collisionIgnore;
 
 public:
     Ogre::Vector3 paddlePosition;

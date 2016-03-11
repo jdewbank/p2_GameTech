@@ -7,10 +7,12 @@ PhysicsWorld::PhysicsWorld(void)
     overlappingPairCache = new btDbvtBroadphase();
     solver = new btSequentialImpulseConstraintSolver();
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0,0,40));
+    dynamicsWorld->setGravity(btVector3(0,0,60));
 
     collisionIgnoreTimer = 20;
     paddlePosition = Ogre::Vector3(0,0,0);
+
+    collisionIgnore = false;
 }
 
 
@@ -28,13 +30,8 @@ void PhysicsWorld::detectCollisions(void)
 {
     int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
 
+    int ballContacts = 0;
 
-    if(collisionIgnoreTimer > 0 && collisionIgnoreTimer != 20) 
-    {
-        collisionIgnoreTimer--;
-    } else {
-        collisionIgnoreTimer = 20;
-    }
 
     for(int i = 0; i < numManifolds; ++i) 
     {
@@ -47,12 +44,31 @@ void PhysicsWorld::detectCollisions(void)
         void* userPointerA = objectA->getUserPointer();
         void* userPointerB = objectB->getUserPointer();
 
+        Ogre::SceneNode* snA;
+        Ogre::SceneNode* snB;
+
+        if(userPointerA) {
+            snA = static_cast<Ogre::SceneNode*>(userPointerA);
+
+        }
+
+        if(userPointerB) {
+            snB = static_cast<Ogre::SceneNode*>(userPointerB);
+        }
+
         int numContacts = contactManifold->getNumContacts();
 
+        if(snA) {
+            if(snA->getName() == "ball") {
+                ballContacts += numContacts;
+            }
+        }
 
         for(int j = 0; j < numContacts; ++j) 
         {
             btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+            //std::cout << pt.getDistance() << "\n";
             if(pt.getDistance() <= 1.0f) 
             {
                 const btVector3& ptA = pt.getPositionWorldOnA();
@@ -62,20 +78,17 @@ void PhysicsWorld::detectCollisions(void)
                 //std::cout << collisionIgnoreTimer << std::endl;
                 //std::cout << "collision detected!" << std::endl;    
 
-                if(collisionIgnoreTimer == 20) 
+                if(!collisionIgnore) 
                 {
-                    collisionIgnoreTimer--;
-                    //collisionIgnore = true;
 
                     if(userPointerA)
                     {
-                        Ogre::SceneNode* snA = static_cast
-                            <Ogre::SceneNode*>(userPointerA);
+                        if(snA->getName() == "ball") {
+                            collisionIgnore = true;
+                        }
                         //std::cout << "A is " << snA->getName() << std::endl;
                         if(userPointerB)
                         {
-                            Ogre::SceneNode* snB = static_cast
-                                <Ogre::SceneNode*>(userPointerB);
                             //std::cout << "B is " << snB->getName() << std::endl;
                             
                             if (snA->getName() == "floor" ||
@@ -101,11 +114,15 @@ void PhysicsWorld::detectCollisions(void)
                             physScore->addScore(3);
                         }
                     }
-                    std::cout << "Score: " << physScore->getScore() << std::endl;
-                    std::cout << "Best : " << physScore->getBest()  << std::endl;
+                     std::cout << "Score: " << physScore->getScore() << std::endl;
+                     std::cout << "Best : " << physScore->getBest()  << std::endl;
                 }
             }
         }
+    }
+
+    if(ballContacts == 0) {
+        collisionIgnore = false;
     }
 }
 

@@ -9,7 +9,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btVector3 localPlaneInertia(0,0,0);
 
     btScalar wallRestitution(0.8f);
-    btScalar groundRestitution(1.25f);
+    btScalar groundRestitution(1.0f);
 
     rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("room");
 
