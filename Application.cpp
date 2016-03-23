@@ -52,7 +52,9 @@ void Application::createScene(void)
 
     //Paddle
     Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
-    mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics);
+    mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 1);
+
+    mPaddle2 = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 2);
 
     //PlayingField    
     mField = new PlayingField(mSceneMgr, 
@@ -103,12 +105,12 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mScorePanel->setParamValue(0, score );
         mScorePanel->setParamValue(1, best  );
         
-        mCamera->setPosition(
-            mPhysics->paddlePosition.x, 
-            mPhysics->paddlePosition.y -250, 
-            mPhysics->paddlePosition.z -200);
+        // mCamera->setPosition(
+        //     mPhysics->paddlePosition.x, 
+        //     mPhysics->paddlePosition.y -250, 
+        //     mPhysics->paddlePosition.z -200);
 
-        mCamera->lookAt(mPhysics->paddlePosition);
+        // mCamera->lookAt(mPhysics->paddlePosition);
     }
     return super;
 }

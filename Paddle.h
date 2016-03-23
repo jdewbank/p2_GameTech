@@ -13,7 +13,7 @@ class Paddle {
 		PhysicsWorld* world;
 
 	public: 
-		Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys); 
+		Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys, int playerNum); 
 		~Paddle(); 
 		Ogre::SceneNode* getNode() { return paddleNode; } 
 };

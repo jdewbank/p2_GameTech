@@ -31,6 +31,7 @@ protected:
 
     int collisionIgnoreTimer;
     bool collisionIgnore;
+    int lastPaddleHit;
 
 public:
     Ogre::Vector3 paddlePosition;

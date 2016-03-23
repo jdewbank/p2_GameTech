@@ -37,6 +37,7 @@ protected:
   Ball* mBall;
   PlayingField* mField;
   Paddle* mPaddle;
+  Paddle* mPaddle2;
   PhysicsWorld* mPhysics;
   SoundPlayer* mSound;
   Scoreboard* mScore;

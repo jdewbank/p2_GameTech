@@ -1,6 +1,6 @@
 #include "Paddle.h"
 
-Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys) { 
+Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real fieldSize, PhysicsWorld* phys, int playerNum) { 
 
     int paddleHeight = 20;
 
@@ -10,12 +10,22 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     paddle->setMaterialName("PaddleMaterial"); 
 
     paddle->setCastShadows(true); 
-    paddleNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle"); 
+    if(playerNum == 1) {
+        paddleNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle"); 
+    } else {
+        paddleNode = scnMgr->getRootSceneNode()->createChildSceneNode("paddle2"); 
+    }
+
     std::cout << "Created sceneNode with name: " << paddleNode->getName() << std::endl;
     paddleNode->attachObject(paddle); 
     paddleNode->scale(paddleSpecs);
 
-    paddleNode->translate(0,0,fieldSize/2 - paddleHeight);
+    if(playerNum == 1) {
+        paddleNode->translate(0,0,fieldSize/2 - paddleHeight);
+    } else {
+        paddleNode->translate(0,fieldSize,fieldSize/2 - paddleHeight);
+    }
+
     
     btScalar paddleX = paddleSpecs.x * 50;
     btScalar paddleY = paddleSpecs.y * 50;
@@ -30,7 +40,13 @@ Paddle::Paddle(Ogre::SceneManager* scnMgr, Ogre::Vector3 paddleSpecs, Ogre::Real
     btScalar mass(.0f);
     btVector3 inertia(0,0,0);
 
-    startTransform.setOrigin(btVector3(0,0,fieldSize/2 - paddleHeight));
+
+    if(playerNum == 1) {
+        startTransform.setOrigin(btVector3(0,0,fieldSize/2 - paddleHeight));
+    } else {
+        startTransform.setOrigin(btVector3(0,fieldSize,fieldSize/2 - paddleHeight));
+    }
+
 
     //left/right, forward/back, spin
     startTransform.setRotation(btQuaternion(0,0,0));

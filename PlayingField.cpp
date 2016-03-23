@@ -8,7 +8,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     btScalar planeMass(0.);
     btVector3 localPlaneInertia(0,0,0);
 
-    btScalar wallRestitution(0.9f);
+    btScalar wallRestitution(0.7f);
     btScalar groundRestitution(1.0f);
 
     rootNode = scnMgr->getRootSceneNode()->createChildSceneNode("room");
@@ -21,13 +21,16 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "negX",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         negXplane, 
-        cSizeWHL.y, cSizeWHL.z, 20, 20, 
+        cSizeWHL.y*2.0f, cSizeWHL.z, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* negX = scnMgr->createEntity("negX");
-    rootNode->createChildSceneNode()->attachObject(negX);
+    Ogre::SceneNode* negXnode = rootNode->createChildSceneNode();
+    negXnode->attachObject(negX);
+
+    negXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
 
     negX->setCastShadows(false);
     negX->setMaterialName(materialName);
@@ -58,13 +61,16 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "posX",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         posXplane, 
-        cSizeWHL.y, cSizeWHL.z, 20, 20, 
+        cSizeWHL.y*2.0f, cSizeWHL.z, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_Z);
 
     Ogre::Entity* posX = scnMgr->createEntity("posX");
-    rootNode->createChildSceneNode()->attachObject(posX);
+    Ogre::SceneNode* posXnode = rootNode->createChildSceneNode();
+    posXnode->attachObject(posX);
+
+    posXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
 
     posX->setCastShadows(false);
     posX->setMaterialName(materialName);
@@ -88,7 +94,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     }
 
     //Positive Y plane
-    Ogre::Plane posYplane(-1*Ogre::Vector3::UNIT_Y, -cSizeWHL.y/2.0f);
+    Ogre::Plane posYplane(-1*Ogre::Vector3::UNIT_Y, -cSizeWHL.y*1.5f);
     Ogre::MeshManager::getSingleton().createPlane(
         "posY",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -108,7 +114,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     {
         btTransform groundTransform;
         groundTransform.setIdentity();
-        groundTransform.setOrigin(btVector3(0, cSizeWHL.y/2.0f, 0));
+        groundTransform.setOrigin(btVector3(0, cSizeWHL.y, 0));
 
         btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,-1,0), 0);
         btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);
@@ -200,7 +206,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "posZ",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         posZplane, 
-        cSizeWHL.x, cSizeWHL.y, 20, 20, 
+        cSizeWHL.x*2.0f, cSizeWHL.y, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_X);
@@ -208,6 +214,8 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     Ogre::Entity* posZ = scnMgr->createEntity("posZ");
     Ogre::SceneNode* floorNode = rootNode->createChildSceneNode("floor");
     floorNode->attachObject(posZ);
+
+    floorNode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.z/2.0f, 0.0f));
 
     posZ->setCastShadows(false);
     posZ->setMaterialName(materialName);

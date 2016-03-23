@@ -11,6 +11,7 @@ PhysicsWorld::PhysicsWorld(void)
 
     collisionIgnoreTimer = 20;
     paddlePosition = Ogre::Vector3(0,0,0);
+    lastPaddleHit = 1;
 
     collisionIgnore = false;
 }
@@ -96,7 +97,21 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Floor collision
                                 physSound->playSound(2);
-                                physScore->resetScore();
+
+                                if(snA->getName() == "ball") {
+                                    if(snA->getPosition().y > 100.0f) {
+                                        std::cout << "Player 1 gets a point!\n";
+                                    } else {
+                                        std::cout << "Player 2 gets a point!\n";
+                                    }
+                                } else {
+                                    if(snA->getPosition().y > 100.0f) {
+                                        std::cout << "Player 1 gets a point!\n";
+                                    } else {
+                                        std::cout << "Player 2 gets a point!\n";
+                                    }
+                                }
+                                //physScore->resetScore();
                             }
                             else if (
                                 snA->getName() == "paddle" ||
@@ -104,8 +119,20 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
-                                physScore->addScore(1);    
+                                physScore->addScore(1);  
+
+                                lastPaddleHit = 1;  
                             }      
+                            else if (
+                                snA->getName() == "paddle2" ||
+                                snB->getName() == "paddle2" )
+                            {
+                                // Paddle collision
+                                physSound->playSound(1);
+                                physScore->addScore(1);    
+
+                                lastPaddleHit = 2;
+                            } 
                         }
                         else 
                         {
@@ -158,8 +185,11 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     //Ball's behavior
                 } 
 
-                else if(sn->getName() == "paddle")
+                else if(sn->getName() == "paddle" || sn->getName() == "paddle2")
                 {
+                    int paddleMult = 0;
+                    if(sn->getName() == "paddle2")
+                        paddleMult = 1;
 
                     float paddleMoveSpeed = 0.06f;
                     btScalar rotationSpeed = .005f;
@@ -169,7 +199,7 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     //TRANSLATION
                     // up
                     if(paddleTranslate[0]) {
-                        if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f)) {
+                        if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f + paddleMult*200.0f)) {
                             newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed, 0));
                         }
                     }
@@ -183,7 +213,7 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
 
                     // down
                     if(paddleTranslate[2]) {
-                        if(newTrans.getOrigin().getY() > (-100.0f + 30.0f/2.0f)) {
+                        if(newTrans.getOrigin().getY() > (-100.0f + 30.0f/2.0f + paddleMult*200.0f)) {
                             newTrans.getOrigin() += (btVector3(0, -paddleMoveSpeed, 0));
                         }
                     }
