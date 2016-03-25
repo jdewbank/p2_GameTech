@@ -4,16 +4,15 @@
 class Scoreboard
 {
 protected:
-	unsigned int bestScore;
-	unsigned int newScore;
+	unsigned int* playerScore;
+
 public:
 	Scoreboard();
 	~Scoreboard();
     void resetAll();
-    void resetScore();
-    void addScore(int);
-    unsigned int getScore() { return newScore; };
-    unsigned int getBest()  { return bestScore; };
+    void resetScore(int num);
+    void addScore(int points, int num);
+    unsigned int getScore(int num);
 };
 
 #endif // #ifndef __Scoreboard_h_

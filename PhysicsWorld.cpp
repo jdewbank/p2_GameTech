@@ -101,14 +101,18 @@ void PhysicsWorld::detectCollisions(void)
                                 if(snA->getName() == "ball") {
                                     if(snA->getPosition().y > 100.0f) {
                                         std::cout << "Player 1 gets a point!\n";
+                                        physScore->addScore(1,1);
                                     } else {
                                         std::cout << "Player 2 gets a point!\n";
+                                        physScore->addScore(1,2);
                                     }
                                 } else {
                                     if(snA->getPosition().y > 100.0f) {
                                         std::cout << "Player 1 gets a point!\n";
+                                        physScore->addScore(1,1);
                                     } else {
                                         std::cout << "Player 2 gets a point!\n";
+                                        physScore->addScore(1,2);
                                     }
                                 }
                                 //physScore->resetScore();
@@ -119,7 +123,7 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
-                                physScore->addScore(1);  
+                                //physScore->addScore(1);  
 
                                 lastPaddleHit = 1;  
                             }      
@@ -129,7 +133,7 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
-                                physScore->addScore(1);    
+                                //physScore->addScore(1);    
 
                                 lastPaddleHit = 2;
                             } 
@@ -138,11 +142,11 @@ void PhysicsWorld::detectCollisions(void)
                         {
                             // Wall collision
                             physSound->playSound(0);
-                            physScore->addScore(3);
+                            //physScore->addScore(3);
                         }
                     }
-                     std::cout << "Score: " << physScore->getScore() << std::endl;
-                     std::cout << "Best : " << physScore->getBest()  << std::endl;
+                    //std::cout << "Player 1: " << physScore->getScore(1) << std::endl;
+                    //std::cout << "Player 2: " << physScore->getScore(2)  << std::endl;
                 }
             }
         }

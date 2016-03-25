@@ -69,8 +69,8 @@ void Application::createScene(void)
     mPhysics->setScoreboard(mScore);
 
     Ogre::StringVector items;
-    items.push_back("Score    :");
-    items.push_back("Highscore:");
+    items.push_back("Player 1:");
+    items.push_back("Player 2:");
 
     if(mTrayMgr)
         mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
@@ -100,10 +100,10 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
-        Ogre::String score = Ogre::StringConverter::toString(mScore->getScore());
-        Ogre::String best  = Ogre::StringConverter::toString(mScore->getBest() );
-        mScorePanel->setParamValue(0, score );
-        mScorePanel->setParamValue(1, best  );
+        Ogre::String score1 = Ogre::StringConverter::toString(mScore->getScore(1));
+        Ogre::String score2 = Ogre::StringConverter::toString(mScore->getScore(2));
+        mScorePanel->setParamValue(0, score1 );
+        mScorePanel->setParamValue(1, score2 );
         
         // mCamera->setPosition(
         //     mPhysics->paddlePosition.x, 
