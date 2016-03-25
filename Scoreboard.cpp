@@ -1,10 +1,9 @@
 #include "Scoreboard.h"
 
-#define MAX 2
-
-Scoreboard::Scoreboard() 
+Scoreboard::Scoreboard(unsigned int num) 
 { 	
-	playerScore = new unsigned int[MAX];
+	numPlayers = num;
+	playerScore = new unsigned int[numPlayers];
 	resetAll(); 
 }
 
@@ -16,24 +15,24 @@ Scoreboard::~Scoreboard()
 
 void Scoreboard::resetAll() 
 { 
-	for(int num = 1; num <= MAX; num++)
+	for(int num = 1; num <= numPlayers; num++)
 		resetScore(num);
 }
 
 void Scoreboard::resetScore(int num) 
-{ 	if (num <= MAX && num > 0) //check indexing bounds
+{ 	if (num <= numPlayers && num > 0) //check indexing bounds
 		playerScore[num-1] = 0;
 }
     
 void Scoreboard::addScore(int points, int num) 
 { 
-	if (num <= MAX && num > 0) //check indexing bounds
+	if (num <= numPlayers && num > 0) //check indexing bounds
 		playerScore[num-1] += points;
 }
 
 unsigned int Scoreboard::getScore(int num) 
 { 	
-	if (num <= MAX && num > 0) 
+	if (num <= numPlayers && num > 0) 
 		return playerScore[num-1]; 
 	else return 0;
 }

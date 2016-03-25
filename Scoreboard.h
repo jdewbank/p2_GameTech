@@ -4,10 +4,11 @@
 class Scoreboard
 {
 protected:
+	unsigned int numPlayers;
 	unsigned int* playerScore;
 
 public:
-	Scoreboard();
+	Scoreboard(unsigned int num = 2);
 	~Scoreboard();
     void resetAll();
     void resetScore(int num);
