@@ -32,6 +32,7 @@ class Application : public BaseApplication
 public:
     Application(void);
     virtual ~Application(void);
+    bool multiplayerFlag;
 
 protected:
   Ball* mBall;
@@ -41,6 +42,7 @@ protected:
   PhysicsWorld* mPhysics;
   SoundPlayer* mSound;
   Scoreboard* mScore;
+
 
   OgreBites::ParamsPanel* mScorePanel; 
 

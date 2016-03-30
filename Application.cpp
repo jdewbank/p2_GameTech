@@ -29,6 +29,9 @@ Application::~Application(void)
 //---------------------------------------------------------------------------
 void Application::createScene(void)
 {
+    if(multiplayerFlag) std::cout << "**********************************Multiplayer!**********************************\n";
+    else std::cout << "**********************************Singleplayer!**********************************\n";
+
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     //Set up Physics
@@ -54,11 +57,11 @@ void Application::createScene(void)
     Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
     mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 1);
 
-    mPaddle2 = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 2);
+    if(multiplayerFlag) mPaddle2 = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 2);
 
     //PlayingField    
     mField = new PlayingField(mSceneMgr, 
-        Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics);
+        Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics, multiplayerFlag);
 
     //Sounds
     mSound = new SoundPlayer(); 
@@ -70,7 +73,7 @@ void Application::createScene(void)
 
     Ogre::StringVector items;
     items.push_back("Player 1:");
-    items.push_back("Player 2:");
+    if(multiplayerFlag) items.push_back("Player 2:");
 
     if(mTrayMgr)
         mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
@@ -101,16 +104,21 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
         Ogre::String score1 = Ogre::StringConverter::toString(mScore->getScore(1));
-        Ogre::String score2 = Ogre::StringConverter::toString(mScore->getScore(2));
         mScorePanel->setParamValue(0, score1 );
-        mScorePanel->setParamValue(1, score2 );
+        if(multiplayerFlag) {
+            Ogre::String score2 = Ogre::StringConverter::toString(mScore->getScore(2));
+            mScorePanel->setParamValue(1, score2 );
+        } 
         
-        // mCamera->setPosition(
-        //     mPhysics->paddlePosition.x, 
-        //     mPhysics->paddlePosition.y -250, 
-        //     mPhysics->paddlePosition.z -200);
+        if(!multiplayerFlag) {
+            mCamera->setPosition(
+                mPhysics->paddlePosition.x, 
+                mPhysics->paddlePosition.y -250, 
+                mPhysics->paddlePosition.z -200);
 
-        // mCamera->lookAt(mPhysics->paddlePosition);
+            mCamera->lookAt(mPhysics->paddlePosition);
+        }
+
     }
     return super;
 }
@@ -149,9 +157,22 @@ extern "C" {
     {
         // Create application object
         Application app;
+        std::cout << "TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST\n";
+        if(argc > 1) {
+            Ogre::String mode = argv[1];
+            if(mode == "single") {
+                app.multiplayerFlag = false;
+            } else {
+                app.multiplayerFlag = true;
+            }
+        } else {
+            app.multiplayerFlag = false;
+        }
+        
 
         try {
             app.go();
+
         } catch(Ogre::Exception& e)  {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
             MessageBox(NULL, e.getFullDescription().c_str(), "An exception has occurred!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
@@ -163,6 +184,8 @@ extern "C" {
 
         return 0;
     }
+
+
 
 #ifdef __cplusplus
 }

@@ -1,7 +1,11 @@
 #include "PlayingField.h"
 
-PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, PhysicsWorld* phys) {
+PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, PhysicsWorld* phys, bool multiplayerFlag) {
     cSizeWHL = Ogre::Vector3(whl.x, whl.y, whl.z);
+
+    multiplayerFlag = multiplayerFlag;
+    float planeScale = 1.0f;
+    if(multiplayerFlag) planeScale = 2.0f;
 
     world = phys;
 
@@ -21,7 +25,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "negX",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         negXplane, 
-        cSizeWHL.y*2.0f, cSizeWHL.z, 20, 20, 
+        cSizeWHL.y*planeScale, cSizeWHL.z, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_Z);
@@ -30,7 +34,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     Ogre::SceneNode* negXnode = rootNode->createChildSceneNode();
     negXnode->attachObject(negX);
 
-    negXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
+    if(multiplayerFlag) negXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
 
     negX->setCastShadows(false);
     negX->setMaterialName(materialName);
@@ -61,7 +65,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "posX",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         posXplane, 
-        cSizeWHL.y*2.0f, cSizeWHL.z, 20, 20, 
+        cSizeWHL.y*planeScale, cSizeWHL.z, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_Z);
@@ -70,7 +74,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     Ogre::SceneNode* posXnode = rootNode->createChildSceneNode();
     posXnode->attachObject(posX);
 
-    posXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
+    if(multiplayerFlag) posXnode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.x/2.0f, 0.0f));
 
     posX->setCastShadows(false);
     posX->setMaterialName(materialName);
@@ -94,7 +98,11 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     }
 
     //Positive Y plane
-    Ogre::Plane posYplane(-1*Ogre::Vector3::UNIT_Y, -cSizeWHL.y*1.5f);
+    float posYdisplacement = 0.5f;
+    if(multiplayerFlag) {
+        posYdisplacement = 1.5f;
+    } 
+    Ogre::Plane posYplane(-1*Ogre::Vector3::UNIT_Y, -cSizeWHL.y*posYdisplacement);
     Ogre::MeshManager::getSingleton().createPlane(
         "posY",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -206,7 +214,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
         "posZ",
         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
         posZplane, 
-        cSizeWHL.x*2.0f, cSizeWHL.y, 20, 20, 
+        cSizeWHL.x*planeScale, cSizeWHL.y, 20, 20, 
         true, 
         1, 5, 5, 
         Ogre::Vector3::UNIT_X);
@@ -215,7 +223,7 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     Ogre::SceneNode* floorNode = rootNode->createChildSceneNode("floor");
     floorNode->attachObject(posZ);
 
-    floorNode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.z/2.0f, 0.0f));
+    if(multiplayerFlag) floorNode->setPosition(Ogre::Vector3(0.0f, cSizeWHL.z/2.0f, 0.0f));
 
     posZ->setCastShadows(false);
     posZ->setMaterialName(materialName);

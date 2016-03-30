@@ -10,9 +10,10 @@ class PlayingField {
 		Ogre::SceneNode* rootNode; 
 		Ogre::Vector3 cSizeWHL; 
         PhysicsWorld* world;
+        bool multiplayerFlag;
 
 	public: 
-		PlayingField(Ogre::SceneManager*, Ogre::Vector3, PhysicsWorld*); 
+		PlayingField(Ogre::SceneManager*, Ogre::Vector3, PhysicsWorld*, bool); 
 		~PlayingField(); 
 
 		Ogre::Real getWidth();
