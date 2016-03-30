@@ -204,28 +204,28 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     // up
                     if(paddleTranslate[0]) {
                         if(newTrans.getOrigin().getY() < (100.0f - 30.0f/2.0f + paddleMult*200.0f)) {
-                            newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed, 0));
+                            newTrans.getOrigin() += (btVector3(0, paddleMoveSpeed * (1000.0f * frameTime), 0));
                         }
                     }
 
                     // left
                     if(paddleTranslate[1]) {
                         if(newTrans.getOrigin().getX() < (100.0f - 40.0f/2.0f)) {
-                            newTrans.getOrigin() += (btVector3(paddleMoveSpeed, 0, 0));
+                            newTrans.getOrigin() += (btVector3(paddleMoveSpeed * (1000.0f * frameTime), 0, 0));
                         }
                     }
 
                     // down
                     if(paddleTranslate[2]) {
                         if(newTrans.getOrigin().getY() > (-100.0f + 30.0f/2.0f + paddleMult*200.0f)) {
-                            newTrans.getOrigin() += (btVector3(0, -paddleMoveSpeed, 0));
+                            newTrans.getOrigin() += (btVector3(0, -paddleMoveSpeed * (1000.0f * frameTime), 0));
                         }
                     }
 
                     //right
                     if(paddleTranslate[3]) {
                         if(newTrans.getOrigin().getX() > (-100.0f + 40.0f/2.0f)) {
-                            newTrans.getOrigin() += (btVector3(-paddleMoveSpeed, 0, 0));
+                            newTrans.getOrigin() += (btVector3(-paddleMoveSpeed * (1000.0f * frameTime), 0, 0));
                         }
                     }
 
@@ -236,21 +236,21 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     // ROTATION
                     // up
                     if(paddleRotate[0] && roll < 1) {
-                        roll += rotationSpeed;
+                        roll += rotationSpeed * (1000.0f * frameTime);
                     }
                     // left
                     if(paddleRotate[1] && pitch > -1) {
-                        pitch -= rotationSpeed;
+                        pitch -= rotationSpeed * (1000.0f * frameTime);
                     }
 
                     // down
                     if(paddleRotate[2] && roll > -1) {
-                        roll -= rotationSpeed;
+                        roll -= rotationSpeed * (1000.0f * frameTime);
                     }
 
                     //right
                     if(paddleRotate[3] && pitch < 1){
-                        pitch += rotationSpeed;
+                        pitch += rotationSpeed * (1000.0f * frameTime);
                     }
 
                     //reset
