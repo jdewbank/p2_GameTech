@@ -78,6 +78,28 @@ void Application::createScene(void)
 
     if(mTrayMgr)
         mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
+
+    if(multiplayerFlag)
+    {
+        NetManager* net = new NetManager();
+        bool result = net->initNetManager();
+
+        std::cout << "Init Result: " << result << std::endl;
+
+        if (server)
+        {
+            net->addNetworkInfo(PROTOCOL_TCP,NULL,63281);
+            bool startResult = net->startServer();
+            std::cout << "Server Start Result: " << startResult << std::endl;
+        } 
+        else 
+        {
+            net->addNetworkInfo(PROTOCOL_TCP,host,63281);
+            bool startResult = net->startClient();
+
+            std::cout << "Client Start Result: " << startResult << std::endl;
+        }
+    }
 }
 
 
@@ -163,8 +185,16 @@ extern "C" {
             Ogre::String mode = argv[1];
             if(mode == "single") {
                 app.multiplayerFlag = false;
-            } else if (mode == "multi") {
+            } else if (mode == "server") {
                 app.multiplayerFlag = true;
+                app.server = true;
+            } else if (mode == "client") {
+                app.multiplayerFlag = true;
+                app.server = false;
+                if(argc >2)
+                    app.host = argv[2];
+                else
+                    std::cout << "You need to provide a host name if you are a client." << std::endl;
             }
         } else {
             app.multiplayerFlag = false;

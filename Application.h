@@ -24,6 +24,7 @@ http://www.ogre3d.org/wiki/
 #include "Paddle.h"
 #include "SoundPlayer.h"
 #include "Scoreboard.h"
+#include "NetManager.h"
 
 //---------------------------------------------------------------------------
 
@@ -33,6 +34,8 @@ public:
     Application(void);
     virtual ~Application(void);
     bool multiplayerFlag;
+    bool server;
+    const char* host;
 
 protected:
   Ball* mBall;
