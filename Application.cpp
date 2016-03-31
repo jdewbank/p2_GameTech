@@ -88,31 +88,52 @@ void Application::createScene(void)
 
         if (server)
         {
-            net->addNetworkInfo(PROTOCOL_TCP,NULL,63281);
+            net->addNetworkInfo(PROTOCOL_UDP,NULL,63281);
             bool startResult = net->startServer();
 
             std::cout << "Server Start Result: " << startResult << std::endl;
 
-            while (!net->pollForActivity());
-
-            for(ClientData* cd: net->tcpClientData)
+            net->acceptConnections();
+            while (!net->pollForActivity())
             {
-                if(cd->updated)
-                {
-                    std::cout << "UPDATED!!!" << std::endl;
-                }
-                std::cout << cd->output << std::endl;
+
+            }
+            net->denyConnections();
+
+            std::cout << "list length: " << net->udpClientData.size() << std::endl;
+
+            for(int i = 0; i < net->udpClientData.size(); ++i)
+            {
+                ClientData* cd = net->udpClientData[i];
+
+
+                float* f_buf = (float*) cd->output;
+
+                for(int i = 0; i < 3; ++i)
+                    std::cout << i << ": " << f_buf[i] << std::endl;
+
+                std::cout << std::endl;
+
             }
 
         } 
         else 
         {
-            net->addNetworkInfo(PROTOCOL_TCP,host,63281);
+            net->addNetworkInfo(PROTOCOL_UDP,host,63281);
             bool startResult = net->startClient();
 
-            const char* buf = "hello";
+            float f1 = 10.6f;
+            float f2 = -19.2f;
+            float f3 = 0.0f;
 
-            net->messageServer(PROTOCOL_TCP,buf,sizeof(buf));
+            const char buf[128] = {};
+            float* f_buf = (float*)buf;
+
+            f_buf[0] = f1;
+            f_buf[1] = f2;
+            f_buf[2] = f3;
+
+            net->messageServer(PROTOCOL_UDP,buf,sizeof(buf));
 
             std::cout << "Client Start Result: " << startResult << std::endl;
         }
