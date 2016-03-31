@@ -48,21 +48,13 @@ void PhysicsWorld::detectCollisions(void)
         Ogre::SceneNode* snA;
         Ogre::SceneNode* snB;
 
-        if(userPointerA) {
-            snA = static_cast<Ogre::SceneNode*>(userPointerA);
-
-        }
-
-        if(userPointerB) {
-            snB = static_cast<Ogre::SceneNode*>(userPointerB);
-        }
-
+        if(userPointerA) snA = static_cast<Ogre::SceneNode*>(userPointerA);
+        if(userPointerB) snB = static_cast<Ogre::SceneNode*>(userPointerB);
+        
         int numContacts = contactManifold->getNumContacts();
 
-        if(snA) {
-            if(snA->getName() == "ball") {
-                ballContacts += numContacts;
-            }
+        if(snA && snA->getName() == "ball") {
+            ballContacts += numContacts;
         }
 
         for(int j = 0; j < numContacts; ++j) 
@@ -80,8 +72,7 @@ void PhysicsWorld::detectCollisions(void)
                 //std::cout << "collision detected!" << std::endl;    
 
                 if(!collisionIgnore) 
-                {
-
+                {   
                     if(userPointerA)
                     {
                         if(snA->getName() == "ball") {
@@ -98,24 +89,38 @@ void PhysicsWorld::detectCollisions(void)
                                 // Floor collision
                                 physSound->playSound(2);
 
-                                if(snA->getName() == "ball") {
-                                    if(snA->getPosition().y > 100.0f) {
-                                        std::cout << "Player 1 gets a point!\n";
-                                        physScore->addScore(1,1);
-                                    } else {
-                                        std::cout << "Player 2 gets a point!\n";
-                                        physScore->addScore(1,2);
-                                    }
-                                } else {
-                                    if(snA->getPosition().y > 100.0f) {
-                                        std::cout << "Player 1 gets a point!\n";
-                                        physScore->addScore(1,1);
-                                    } else {
-                                        std::cout << "Player 2 gets a point!\n";
-                                        physScore->addScore(1,2);
+                                if(!multiplayer) 
+                                {
+                                    physScore->resetScore();
+                                }
+                                else 
+                                {
+                                    if(snA->getName() == "ball") {
+                                        if(snA->getPosition().y > 100.0f) 
+                                        {
+                                            std::cout << "Player 1 gets a point!\n";
+                                            physScore->addScore(1,1);
+                                        } 
+                                        else 
+                                        {
+                                            std::cout << "Player 2 gets a point!\n";
+                                            physScore->addScore(1,2);
+                                        }
+                                    } 
+                                    else 
+                                    {
+                                        if(snA->getPosition().y > 100.0f) 
+                                        {
+                                            std::cout << "Player 1 gets a point!\n";
+                                            physScore->addScore(1,1);
+                                        } 
+                                        else 
+                                        {
+                                            std::cout << "Player 2 gets a point!\n";
+                                            physScore->addScore(1,2);
+                                        }
                                     }
                                 }
-                                //physScore->resetScore();
                             }
                             else if (
                                 snA->getName() == "paddle" ||
@@ -123,7 +128,9 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
-                                //physScore->addScore(1);  
+                                
+                                if(!multiplayer) 
+                                    physScore->addScore(1);  
 
                                 lastPaddleHit = 1;  
                             }      
@@ -133,8 +140,7 @@ void PhysicsWorld::detectCollisions(void)
                             {
                                 // Paddle collision
                                 physSound->playSound(1);
-                                //physScore->addScore(1);    
-
+                                
                                 lastPaddleHit = 2;
                             } 
                         }
@@ -142,7 +148,9 @@ void PhysicsWorld::detectCollisions(void)
                         {
                             // Wall collision
                             physSound->playSound(0);
-                            //physScore->addScore(3);
+                            
+                            if(!multiplayer) 
+                                physScore->addScore(3);
                         }
                     }
                     //std::cout << "Player 1: " << physScore->getScore(1) << std::endl;
@@ -236,7 +244,7 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     // ROTATION
                     // up
                     if(paddleRotate[0] && roll < 1) {
-                        roll += rotationSpeed * (1000.0f * frameTime);
+                        roll  += rotationSpeed * (1000.0f * frameTime);
                     }
                     // left
                     if(paddleRotate[1] && pitch > -1) {
@@ -245,7 +253,7 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
 
                     // down
                     if(paddleRotate[2] && roll > -1) {
-                        roll -= rotationSpeed * (1000.0f * frameTime);
+                        roll  -= rotationSpeed * (1000.0f * frameTime);
                     }
 
                     //right
@@ -254,10 +262,11 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     }
 
                     //reset
-                    if(paddleRotate[4]){
+                    if(paddleRotate[4])
+                    {
                         pitch = 0;
-                        roll = 0;
-                        yaw = 0;
+                        roll  = 0;
+                        yaw   = 0;
                     }
                     
                     btQuaternion tmp;

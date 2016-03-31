@@ -15,23 +15,24 @@ Scoreboard::~Scoreboard()
 
 void Scoreboard::resetAll() 
 { 
-	for(int num = 1; num <= numPlayers; num++)
+	for(int num = 1; num <= numPlayers; ++num)
 		resetScore(num);
 }
 
 void Scoreboard::resetScore(int num) 
-{ 	if (num <= numPlayers && num > 0) //check indexing bounds
+{ 	//check indexing bounds
+	if (num <= numPlayers && num > 0) 
 		playerScore[num-1] = 0;
 }
     
 void Scoreboard::addScore(int points, int num) 
-{ 
-	if (num <= numPlayers && num > 0) //check indexing bounds
+{ 	//check indexing bounds
+	if (num <= numPlayers && num > 0) 
 		playerScore[num-1] += points;
 }
 
 unsigned int Scoreboard::getScore(int num) 
-{ 	
+{ 	//check indexing bounds
 	if (num <= numPlayers && num > 0) 
 		return playerScore[num-1]; 
 	else return 0;
