@@ -90,12 +90,29 @@ void Application::createScene(void)
         {
             net->addNetworkInfo(PROTOCOL_TCP,NULL,63281);
             bool startResult = net->startServer();
+
             std::cout << "Server Start Result: " << startResult << std::endl;
+
+            while (!net->pollForActivity());
+
+            for(ClientData* cd: net->tcpClientData)
+            {
+                if(cd->updated)
+                {
+                    std::cout << "UPDATED!!!" << std::endl;
+                }
+                std::cout << cd->output << std::endl;
+            }
+
         } 
         else 
         {
             net->addNetworkInfo(PROTOCOL_TCP,host,63281);
             bool startResult = net->startClient();
+
+            const char* buf = "hello";
+
+            net->messageServer(PROTOCOL_TCP,buf,sizeof(buf));
 
             std::cout << "Client Start Result: " << startResult << std::endl;
         }
