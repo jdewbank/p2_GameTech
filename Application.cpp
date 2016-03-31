@@ -36,6 +36,7 @@ void Application::createScene(void)
 
     //Set up Physics
     mPhysics = new PhysicsWorld();
+    mPhysics->setMultiplayer(multiplayerFlag);
 
     //Lights
     Ogre::Light* light = mSceneMgr->createLight("MainLight");

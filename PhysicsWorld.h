@@ -28,6 +28,7 @@ protected:
 
     SoundPlayer* physSound;
     Scoreboard * physScore;
+    bool multiplayer;
 
     int collisionIgnoreTimer;
     bool collisionIgnore;
@@ -46,6 +47,8 @@ public:
     { physSound = mSound; };
     void setScoreboard(Scoreboard* mScore) 
     { physScore = mScore; };
+    void setMultiplayer(bool option = true)
+    { multiplayer = option; };
 };
 
 #endif // #ifndef __PhysicsWorld_h_
