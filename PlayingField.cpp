@@ -122,7 +122,8 @@ PlayingField::PlayingField(Ogre::SceneManager* scnMgr, Ogre::Vector3 whl, Physic
     {
         btTransform groundTransform;
         groundTransform.setIdentity();
-        groundTransform.setOrigin(btVector3(0, cSizeWHL.y, 0));
+        if(multiplayerFlag) groundTransform.setOrigin(btVector3(0, cSizeWHL.y, 0));
+        else groundTransform.setOrigin(btVector3(0, 0.5f*cSizeWHL.y, 0));
 
         btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,-1,0), 0);
         btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);

@@ -157,12 +157,12 @@ extern "C" {
     {
         // Create application object
         Application app;
-        std::cout << "TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST\n";
+        //std::cout << "TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST\n";
         if(argc > 1) {
             Ogre::String mode = argv[1];
             if(mode == "single") {
                 app.multiplayerFlag = false;
-            } else {
+            } else if (mode == "multi") {
                 app.multiplayerFlag = true;
             }
         } else {
