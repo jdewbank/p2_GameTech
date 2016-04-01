@@ -105,6 +105,8 @@ void Application::createScene(void)
 
 bool Application::setupNetwork()
 {
+
+
     net = new NetManager();
     bool result = net->initNetManager();
 
@@ -144,6 +146,13 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         if(mPhysics == NULL)
             return super;
 
+        // if(net)
+        //     std::cout << "NETMANAGER" << std::endl;
+        // else
+        //     std::cout << "NO NETMANAGER" << std::endl;
+        
+
+
         bool client = multiplayerFlag && !server;
 
         //TRANSLATION
@@ -159,6 +168,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         rotationCommands[3] = mKeyboard->isKeyDown(OIS::KC_RIGHT)? !client:client; // right
         rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
+        mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
         
         if(multiplayerFlag) 
         {
@@ -208,6 +218,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 
                 net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
+                std::cout << "Sending Paddle 1 position" << std::endl;
 
             }
             else
@@ -229,6 +240,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 
                 net->messageServer(PROTOCOL_UDP,buf,sizeof(buf));
+                std::cout << "Sending Paddle 2 position" << std::endl;
             }
         }
 
@@ -251,6 +263,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
                             if(buf[0] == 'c')
                             {
+                                std::cout << "Receiving Paddle 2 position" << std::endl;
                                 float* f_buf = (float*)&buf[1];
 
                                 mPhysics->paddle2Position = Ogre::Vector3( 
@@ -297,6 +310,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                             }                            
                             else if(buf[0] == 's')
                             {
+                                std::cout << "Receiving Paddle 1 position" << std::endl;
 
                                 float* f_buf = (float*)&buf[1];
                                 mPhysics->paddle1Position = Ogre::Vector3( 
@@ -316,7 +330,6 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             }
         }
 
-        mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
 
     }
     return super;
