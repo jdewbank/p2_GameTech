@@ -25,6 +25,23 @@ void Scoreboard::resetScore(int num)
 { 	//check indexing bounds
 	if (num <= numPlayers && num > 0) 
 		playerScore[num-1] = 0;
+
+	if(net)
+	{
+		if(server)
+		{
+			const char buf[128] = {0};
+
+			char message = 'r';
+
+			char * c_buf = (char*)buf;
+			c_buf[0] = message;
+			c_buf[2] = (char) num;
+
+			net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
+		}
+	}
+
 }
     
 void Scoreboard::addScore(int points, int num) 

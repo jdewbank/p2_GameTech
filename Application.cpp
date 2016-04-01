@@ -218,6 +218,12 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                                 std::cout << "Add " << buf[1] << " points to " << buf[2] << std::endl; 
                                 mScore->addScore(points,player);
                             }
+                            else if(buf[0] == 'r')
+                            {
+                                int player = (int)buf[1];
+                                std::cout << "Reset the points for player " << buf[1] <<  std::endl; 
+                                mScore->resetScore(player);
+                            }
                         }
 
                     }
