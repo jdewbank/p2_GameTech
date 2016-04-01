@@ -12,6 +12,9 @@ PhysicsWorld::PhysicsWorld(void)
     collisionIgnoreTimer = 20;
     paddle1Position = Ogre::Vector3(0,0,80);
     paddle2Position = Ogre::Vector3(0,200,80);
+
+    paddle1Quaternion = Ogre::Quaternion();
+    paddle2Quaternion = Ogre::Quaternion();
     
     lastPaddleHit = 1;
 
@@ -302,11 +305,14 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                             //get the values for paddle2
                             btTransform newTrans = transform;
                             newTrans.setOrigin(btVector3(paddle2Position.x, paddle2Position.y, paddle2Position.z));
+                            newTrans.setRotation(btQuaternion(paddle2Quaternion.w, paddle2Quaternion.x, paddle2Quaternion.y, paddle2Quaternion.z));
+
                             body->getMotionState()->setWorldTransform(newTrans);
                             body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                             body->setCenterOfMassTransform(newTrans);
 
                             pos = paddle2Position;
+                            quat = paddle2Quaternion;
                         }
                     }
                     else
@@ -322,11 +328,14 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                             //get the values for paddle1
                             btTransform newTrans = transform;
                             newTrans.setOrigin(btVector3(paddle1Position.x, paddle1Position.y, paddle1Position.z));
+                            newTrans.setRotation(btQuaternion(paddle1Quaternion.w, paddle1Quaternion.x, paddle1Quaternion.y, paddle1Quaternion.z));
+                            
                             body->getMotionState()->setWorldTransform(newTrans);
                             body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                             body->setCenterOfMassTransform(newTrans);
 
                             pos = paddle1Position;
+                            quat = paddle1Quaternion;
                         }
                     }
 
