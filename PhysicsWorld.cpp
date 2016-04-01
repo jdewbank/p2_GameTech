@@ -280,6 +280,16 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     body->getMotionState()->setWorldTransform(newTrans);
                     body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                     body->setCenterOfMassTransform(newTrans);
+
+                    if(server) {
+                        paddle1Pitch = pitch;
+                        paddle1Yaw = yaw;
+                        paddle1Roll = roll;
+                    } else {
+                        paddle2Pitch = pitch;
+                        paddle2Yaw = yaw;
+                        paddle2Roll = roll;
+                    }
                     
                     //std::cout << "Moving paddle transform to (" << tempOrigin.getX() << ", " << tempOrigin.getY() << ", " << tempOrigin.getZ() << ")\n";
                     //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
@@ -287,6 +297,7 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                 }
 
 
+                
                 Ogre::Vector3 pos(origin.getX(), origin.getY(), origin.getZ());
                 Ogre::Quaternion quat(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ());
 
@@ -299,20 +310,29 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                         {
                             //set the values for paddle1
                             paddle1Position = Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ());
+
                         } 
                         else if (paddle2)
                         {
                             //get the values for paddle2
                             btTransform newTrans = transform;
                             newTrans.setOrigin(btVector3(paddle2Position.x, paddle2Position.y, paddle2Position.z));
-                            newTrans.setRotation(btQuaternion(paddle2Quaternion.w, paddle2Quaternion.x, paddle2Quaternion.y, paddle2Quaternion.z));
+                            
+                            btQuaternion tmp;
+                            tmp.setEulerZYX(paddle2Yaw, paddle2Pitch, paddle2Roll);
+                            newTrans.setRotation(tmp);
+
+                            //newTrans.setRotation(btQuaternion(paddle2Quaternion.w, paddle2Quaternion.x, paddle2Quaternion.y, paddle2Quaternion.z));
 
                             body->getMotionState()->setWorldTransform(newTrans);
                             body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                             body->setCenterOfMassTransform(newTrans);
 
                             pos = paddle2Position;
-                            quat = paddle2Quaternion;
+                            // quat.x = (float)tmp.x;
+                            // quat.y = (float)tmp.y;
+                            // quat.z = (float)tmp.z;
+                            // quat.w = (float)tmp.w;
                         }
                     }
                     else
@@ -328,14 +348,22 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                             //get the values for paddle1
                             btTransform newTrans = transform;
                             newTrans.setOrigin(btVector3(paddle1Position.x, paddle1Position.y, paddle1Position.z));
-                            newTrans.setRotation(btQuaternion(paddle1Quaternion.w, paddle1Quaternion.x, paddle1Quaternion.y, paddle1Quaternion.z));
+                            
+                            btQuaternion tmp;
+                            tmp.setEulerZYX(paddle1Yaw, paddle1Pitch, paddle1Roll);
+                            newTrans.setRotation(tmp);
+
+                            //newTrans.setRotation(btQuaternion(paddle1Quaternion.w, paddle1Quaternion.x, paddle1Quaternion.y, paddle1Quaternion.z));
                             
                             body->getMotionState()->setWorldTransform(newTrans);
                             body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
                             body->setCenterOfMassTransform(newTrans);
 
                             pos = paddle1Position;
-                            quat = paddle1Quaternion;
+                            // quat.x = (float)tmp.x;
+                            // quat.y = (float)tmp.y;
+                            // quat.z = (float)tmp.z;
+                            // quat.w = (float)tmp.w;
                         }
                     }
 

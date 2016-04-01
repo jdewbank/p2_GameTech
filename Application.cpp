@@ -211,13 +211,17 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 f_buf[1] = (float) mPhysics->paddle1Position.y;
                 f_buf[2] = (float) mPhysics->paddle1Position.z;
 
-                f_buf[3] = (float) mPhysics->paddle1Quaternion.w;
-                f_buf[4] = (float) mPhysics->paddle1Quaternion.x;
-                f_buf[5] = (float) mPhysics->paddle1Quaternion.y;
-                f_buf[6] = (float) mPhysics->paddle1Quaternion.z;
+                // f_buf[3] = (float) mPhysics->paddle1Quaternion.w;
+                // f_buf[4] = (float) mPhysics->paddle1Quaternion.x;
+                // f_buf[5] = (float) mPhysics->paddle1Quaternion.y;
+                // f_buf[6] = (float) mPhysics->paddle1Quaternion.z;
+
+                f_buf[3] = (float) mPhysics->paddle1Pitch;
+                f_buf[4] = (float) mPhysics->paddle1Yaw;
+                f_buf[5] = (float) mPhysics->paddle1Roll;
 
 
-                net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
+                net->messageClients(PROTOCOL_UDP, buf, sizeof(buf));
                 std::cout << "Sending Paddle 1 position" << std::endl;
 
             }
@@ -233,10 +237,14 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 f_buf[1] = (float) mPhysics->paddle2Position.y;
                 f_buf[2] = (float) mPhysics->paddle2Position.z;
 
-                f_buf[3] = (float) mPhysics->paddle2Quaternion.w;
-                f_buf[4] = (float) mPhysics->paddle2Quaternion.x;
-                f_buf[5] = (float) mPhysics->paddle2Quaternion.y;
-                f_buf[6] = (float) mPhysics->paddle2Quaternion.z;
+                // f_buf[3] = (float) mPhysics->paddle2Quaternion.w;
+                // f_buf[4] = (float) mPhysics->paddle2Quaternion.x;
+                // f_buf[5] = (float) mPhysics->paddle2Quaternion.y;
+                // f_buf[6] = (float) mPhysics->paddle2Quaternion.z;
+
+                f_buf[3] = (float) mPhysics->paddle2Pitch;
+                f_buf[4] = (float) mPhysics->paddle2Yaw;
+                f_buf[5] = (float) mPhysics->paddle2Roll;
 
 
                 net->messageServer(PROTOCOL_UDP,buf,sizeof(buf));
@@ -252,7 +260,6 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             {
                 if(server)
                 {
-
                     for(int i = 0; i < net->udpClientData.size(); ++i)
                     {
                         ClientData* cd = net->udpClientData[i];
@@ -271,11 +278,15 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                                     (float)f_buf[1], 
                                     (float)f_buf[2]);
 
-                                mPhysics->paddle2Quaternion = Ogre::Quaternion(
-                                    (float)f_buf[3],
-                                    (float)f_buf[4],
-                                    (float)f_buf[5],
-                                    (float)f_buf[6]);
+                                // mPhysics->paddle2Quaternion = Ogre::Quaternion(
+                                //     (float)f_buf[3],
+                                //     (float)f_buf[4],
+                                //     (float)f_buf[5],
+                                //     (float)f_buf[6]);
+
+                                mPhysics->paddle2Pitch = (float)f_buf[3];
+                                mPhysics->paddle2Yaw = (float)f_buf[4];
+                                mPhysics->paddle2Roll = (float)f_buf[5];
                             }
                         }
 
@@ -286,46 +297,49 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 {   
 
     
-                    for(int i = 0; i < 10; ++i)
+
+                    ClientData cd = net->udpServerData[0];
+
+                    if(cd.updated)
                     {
-                        ClientData cd = net->udpServerData[i];
+                    
+                        char* buf = cd.output;
 
-                        if(cd.updated)
+                        if(buf[0] == 'a')
                         {
-                        
-                            char* buf = cd.output;
+                            int points = (int)buf[1];
+                            int player = (int)buf[2];
+                            std::cout << "Add " << buf[1] << " points to " << buf[2] << std::endl; 
+                            mScore->addScore(points,player);
+                        }
+                        else if(buf[0] == 'r')
+                        {
+                            int player = (int)buf[1];
+                            std::cout << "Reset the points for player " << buf[1] <<  std::endl; 
+                            mScore->resetScore(player);
+                        }                            
+                        else if(buf[0] == 's')
+                        {
+                            std::cout << "Receiving Paddle 1 position" << std::endl;
 
-                            if(buf[0] == 'a')
-                            {
-                                int points = (int)buf[1];
-                                int player = (int)buf[2];
-                                std::cout << "Add " << buf[1] << " points to " << buf[2] << std::endl; 
-                                mScore->addScore(points,player);
-                            }
-                            else if(buf[0] == 'r')
-                            {
-                                int player = (int)buf[1];
-                                std::cout << "Reset the points for player " << buf[1] <<  std::endl; 
-                                mScore->resetScore(player);
-                            }                            
-                            else if(buf[0] == 's')
-                            {
-                                std::cout << "Receiving Paddle 1 position" << std::endl;
+                            float* f_buf = (float*)&buf[1];
+                            mPhysics->paddle1Position = Ogre::Vector3( 
+                                (float)f_buf[0], 
+                                (float)f_buf[1], 
+                                (float)f_buf[2]);
 
-                                float* f_buf = (float*)&buf[1];
-                                mPhysics->paddle1Position = Ogre::Vector3( 
-                                    (float)f_buf[0], 
-                                    (float)f_buf[1], 
-                                    (float)f_buf[2]);
+                            // mPhysics->paddle1Quaternion = Ogre::Quaternion(
+                            //     (float)f_buf[3],
+                            //     (float)f_buf[4],
+                            //     (float)f_buf[5],
+                            //     (float)f_buf[6]);
 
-                                mPhysics->paddle1Quaternion = Ogre::Quaternion(
-                                    (float)f_buf[3],
-                                    (float)f_buf[4],
-                                    (float)f_buf[5],
-                                    (float)f_buf[6]);
-                            }
+                            mPhysics->paddle1Pitch = (float)f_buf[3];
+                            mPhysics->paddle1Yaw = (float)f_buf[4];
+                            mPhysics->paddle1Roll = (float)f_buf[5];
                         }
                     }
+                    
                 }
             }
         }

@@ -39,9 +39,15 @@ public:
 
     Ogre::Vector3    paddle1Position;
     Ogre::Quaternion paddle1Quaternion;
+    float paddle1Pitch;
+    float paddle1Yaw;
+    float paddle1Roll;
 
     Ogre::Vector3    paddle2Position;
     Ogre::Quaternion paddle2Quaternion;
+    float paddle2Pitch;
+    float paddle2Yaw;
+    float paddle2Roll;
 
     PhysicsWorld(void);
     void addRigidBodyToDynamicsWorld(btRigidBody*);
