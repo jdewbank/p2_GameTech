@@ -206,7 +206,20 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                         ClientData cd = net->udpServerData[i];
 
                         if(cd.updated)
+                        {
                             std::cout << "UPDATED!" << std::endl;
+
+                            char* buf = cd.output;
+
+                            if(buf[0] == 'a')
+                            {
+                                int points = (int)buf[1];
+                                int player = (int)buf[2];
+                                std::cout << "Add " << buf[1] << " points to " << buf[2] << std::endl; 
+                                mScore->addScore(points,player);
+                            }
+                        }
+
                     }
                 }
             }

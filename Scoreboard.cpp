@@ -42,6 +42,8 @@ void Scoreboard::addScore(int points, int num)
 
 			char * c_buf = (char*)buf;
 			c_buf[0] = message;
+			c_buf[1] = (char) points;
+			c_buf[2] = (char) num;
 
 			net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
 		}
