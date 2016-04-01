@@ -1,14 +1,18 @@
 #ifndef __Scoreboard_h_
 #define __Scoreboard_h_
 
+#include "NetManager.h"
+
 class Scoreboard
 {
 protected:
 	unsigned int numPlayers;
 	unsigned int* playerScore;
+    NetManager* net;
+    bool server;
 
 public:
-	Scoreboard(unsigned int num = 2);
+	Scoreboard(unsigned int num, NetManager* net, bool server);
 	~Scoreboard();
     void resetAll();
     void resetScore(int num = 1);

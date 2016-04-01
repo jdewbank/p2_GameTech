@@ -1,8 +1,10 @@
 #include "Scoreboard.h"
 
-Scoreboard::Scoreboard(unsigned int num) 
+Scoreboard::Scoreboard(unsigned int num, NetManager* nm, bool s) 
 { 	
 	numPlayers = num;
+	net = nm;
+	server = s;
 	playerScore = new unsigned int[numPlayers];
 	resetAll(); 
 }
@@ -29,6 +31,21 @@ void Scoreboard::addScore(int points, int num)
 { 	//check indexing bounds
 	if (num <= numPlayers && num > 0) 
 		playerScore[num-1] += points;
+
+	if(net)
+	{
+		if(server)
+		{
+			const char buf[128] = {0};
+
+			char message = 'a';
+
+			char * c_buf = (char*)buf;
+			c_buf[0] = message;
+
+			net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
+		}
+	}
 }
 
 unsigned int Scoreboard::getScore(int num) 

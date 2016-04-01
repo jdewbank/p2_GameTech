@@ -45,6 +45,7 @@ protected:
   PhysicsWorld* mPhysics;
   SoundPlayer* mSound;
   Scoreboard* mScore;
+  NetManager* net;
 
 
   OgreBites::ParamsPanel* mScorePanel; 

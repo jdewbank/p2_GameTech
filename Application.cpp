@@ -32,56 +32,9 @@ void Application::createScene(void)
     if(multiplayerFlag) std::cout << "**********************************Multiplayer!**********************************\n";
     else std::cout << "**********************************Singleplayer!**********************************\n";
 
-    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-
-    //Set up Physics
-    mPhysics = new PhysicsWorld();
-    mPhysics->setMultiplayer(multiplayerFlag);
-
-    //Lights
-    Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(0, -50, -200);
-
-    //Shadows
-    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
-
-    //Camera
-    mCamera->setPosition(0, -350, -200);
-    mCamera->lookAt(0, 0, 0);
-
-    //Sphere
-    mBall = new Ball(mSceneMgr, mPhysics);
-
-    Ogre::Real fieldSize = 200;
-
-    //Paddle
-    Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
-    mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 1);
-
-    if(multiplayerFlag) mPaddle2 = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 2);
-
-    //PlayingField    
-    mField = new PlayingField(mSceneMgr, 
-        Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics, multiplayerFlag);
-
-    //Sounds
-    mSound = new SoundPlayer(); 
-    mPhysics->setSoundPlayer(mSound);
-
-    //Score
-    mScore = new Scoreboard();
-    mPhysics->setScoreboard(mScore);
-
-    Ogre::StringVector items;
-    items.push_back("Player 1:");
-    if(multiplayerFlag) items.push_back("Player 2:");
-
-    if(mTrayMgr)
-        mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
-
     if(multiplayerFlag)
     {
-        NetManager* net = new NetManager();
+        net = new NetManager();
         bool result = net->initNetManager();
 
         std::cout << "Init Result: " << result << std::endl;
@@ -94,10 +47,7 @@ void Application::createScene(void)
             std::cout << "Server Start Result: " << startResult << std::endl;
 
             net->acceptConnections();
-            while (!net->pollForActivity())
-            {
-
-            }
+            while (!net->pollForActivity());
             net->denyConnections();
 
             std::cout << "list length: " << net->udpClientData.size() << std::endl;
@@ -138,6 +88,65 @@ void Application::createScene(void)
             std::cout << "Client Start Result: " << startResult << std::endl;
         }
     }
+
+
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+
+    //Set up Physics
+    mPhysics = new PhysicsWorld();
+    mPhysics->setMultiplayer(multiplayerFlag);
+
+    //Lights
+    Ogre::Light* light = mSceneMgr->createLight("MainLight");
+    light->setPosition(0, -50, -200);
+
+    //Shadows
+    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
+
+    //Camera
+    if(multiplayerFlag && !server)
+    {
+        mCamera->setFixedYawAxis(true,-Ogre::Vector3::UNIT_Y);
+        mCamera->setPosition(0, 550, -170);
+        mCamera->lookAt(0, 0, 0);
+    }
+    else
+    {
+        mCamera->setPosition(0, -350, -200);
+        mCamera->lookAt(0, 0, 0);
+    }
+
+    //Sphere
+    mBall = new Ball(mSceneMgr, mPhysics);
+
+    Ogre::Real fieldSize = 200;
+
+    //Paddle
+    Ogre::Vector3 paddleSpecs = Ogre::Vector3(.4f,.3f,.1f);
+    mPaddle = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 1);
+
+    if(multiplayerFlag) mPaddle2 = new Paddle(mSceneMgr, paddleSpecs, fieldSize, mPhysics, 2);
+
+    //PlayingField    
+    mField = new PlayingField(mSceneMgr, 
+        Ogre::Vector3(fieldSize,fieldSize,fieldSize), mPhysics, multiplayerFlag);
+
+    //Sounds
+    mSound = new SoundPlayer(); 
+    mPhysics->setSoundPlayer(mSound);
+
+    //Score
+    mScore = new Scoreboard(2, net, server);
+    mPhysics->setScoreboard(mScore);
+
+    Ogre::StringVector items;
+    items.push_back("Player 1:");
+    if(multiplayerFlag) items.push_back("Player 2:");
+
+    if(mTrayMgr)
+        mScorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_BOTTOMRIGHT, "ScorePanel", 200, items);
+
+
 }
 
 
@@ -178,6 +187,19 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 mPhysics->paddlePosition.z -200);
 
             mCamera->lookAt(mPhysics->paddlePosition);
+        }
+
+        if(multiplayerFlag) {
+            if(net->scanForActivity())
+            {
+                for(int i = 0; i < net->udpClientData.size(); ++i)
+                {
+                    ClientData* cd = net->udpClientData[i];
+
+                    if(cd->updated)
+                        std::cout << "UPDATED!" << std::endl;
+                }
+            }
         }
 
     }
