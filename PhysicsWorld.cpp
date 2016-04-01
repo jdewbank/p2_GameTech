@@ -10,7 +10,9 @@ PhysicsWorld::PhysicsWorld(void)
     dynamicsWorld->setGravity(btVector3(0,0,60));
 
     collisionIgnoreTimer = 20;
-    paddlePosition = Ogre::Vector3(0,0,0);
+    paddle1Position = Ogre::Vector3(0,0,0);
+    paddle2Position = Ogre::Vector3(0,0,0);
+    
     lastPaddleHit = 1;
 
     collisionIgnore = false;
@@ -195,9 +197,8 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                 bool paddle1 = (sn->getName() == "paddle");
                 bool paddle2 = (sn->getName() == "paddle2");
 
-
-
-                if((multiplayer && ((server && paddle1) ||  (!server && paddle2))) || (!multiplayer && (paddle1 || paddle2)))
+                if( ( multiplayer && ((server && paddle1) || (!server && paddle2)) ) 
+                    || (!multiplayer && (paddle1 || paddle2)))
                 {
                     int paddleMult = 0;
                     if(sn->getName() == "paddle2")
@@ -282,10 +283,14 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     
                 }
                     
-                paddlePosition = Ogre::Vector3(
+                paddle1Position = Ogre::Vector3(
                     origin.getX(), origin.getY(), origin.getZ());
-                sn->setPosition(paddlePosition);
-                sn->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+                sn->setPosition(paddle1Position);
+                paddle1Quaternion = Ogre::Quaternion(
+                    orientation.getW(), orientation.getX(), 
+                    orientation.getY(), orientation.getZ());
+                sn->setOrientation(paddle1Quaternion);
+
             }
         }
     }

@@ -8,6 +8,7 @@ class Scoreboard
 protected:
 	unsigned int numPlayers;
 	unsigned int* playerScore;
+    unsigned int highScore;
     NetManager* net;
     bool server;
 
@@ -18,6 +19,7 @@ public:
     void resetScore(int num = 1);
     void addScore(int points, int num = 1);
     unsigned int getScore(int num = 1);
+    unsigned int getHighScore();
 };
 
 #endif // #ifndef __Scoreboard_h_

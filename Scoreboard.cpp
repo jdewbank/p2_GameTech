@@ -19,6 +19,7 @@ void Scoreboard::resetAll()
 { 
 	for(int num = 1; num <= numPlayers; ++num)
 		resetScore(num);
+	highScore = 0;
 }
 
 void Scoreboard::resetScore(int num) 
@@ -41,14 +42,16 @@ void Scoreboard::resetScore(int num)
 			net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
 		}
 	}
-
 }
     
 void Scoreboard::addScore(int points, int num) 
 { 	//check indexing bounds
 	if (num <= numPlayers && num > 0) 
+	{
 		playerScore[num-1] += points;
-
+		if (highScore < playerScore[num-1])
+			highScore = playerScore[num-1];
+	}
 	if(net)
 	{
 		if(server)
@@ -72,4 +75,8 @@ unsigned int Scoreboard::getScore(int num)
 	if (num <= numPlayers && num > 0) 
 		return playerScore[num-1]; 
 	else return 0;
+}
+
+unsigned int Scoreboard::getHighScore() 
+{ 	return highScore;
 }

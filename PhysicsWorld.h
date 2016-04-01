@@ -36,7 +36,12 @@ protected:
     int lastPaddleHit;
 
 public:
-    Ogre::Vector3 paddlePosition;
+
+    Ogre::Vector3    paddle1Position;
+    Ogre::Quaternion paddle1Quaternion;
+
+    Ogre::Vector3    paddle2Position;
+    Ogre::Quaternion paddle2Quaternion;
 
     PhysicsWorld(void);
     void addRigidBodyToDynamicsWorld(btRigidBody*);

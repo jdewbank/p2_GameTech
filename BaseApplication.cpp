@@ -49,8 +49,8 @@ BaseApplication::BaseApplication(void)
 //---------------------------------------------------------------------------
 BaseApplication::~BaseApplication(void)
 {
-    if (mTrayMgr) delete mTrayMgr;
-    if (mCameraMan) delete mCameraMan;
+    if (mTrayMgr)       delete mTrayMgr;
+    if (mCameraMan)     delete mCameraMan;
     if (mOverlaySystem) delete mOverlaySystem;
 
     // Remove ourself as a Window listener
@@ -117,9 +117,9 @@ void BaseApplication::createFrameListener(void)
     mInputManager = OIS::InputManager::createInputSystem(pl);
 
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
-    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
+    mMouse    = static_cast<OIS::Mouse*>   (mInputManager->createInputObject(OIS::OISMouse,    true));
 
-    mMouse->setEventCallback(this);
+    mMouse   ->setEventCallback(this);
     mKeyboard->setEventCallback(this);
 
     // Set initial mouse clipping size
@@ -132,9 +132,8 @@ void BaseApplication::createFrameListener(void)
     mInputContext.mMouse = mMouse;
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-    //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
-
+    
     // Create a params panel for displaying sample details
     Ogre::StringVector items;
     items.push_back("cam.pX");
@@ -150,7 +149,7 @@ void BaseApplication::createFrameListener(void)
     items.push_back("Poly Mode");
 
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(9, "Bilinear");
+    mDetailsPanel->setParamValue( 9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
     mDetailsPanel->hide();
 
@@ -219,23 +218,22 @@ void BaseApplication::go(void)
 #ifdef _DEBUG
 #ifndef OGRE_STATIC_LIB
     mResourcesCfg = m_ResourcePath + "resources_d.cfg";
-    mPluginsCfg = m_ResourcePath + "plugins_d.cfg";
+    mPluginsCfg   = m_ResourcePath +   "plugins_d.cfg";
 #else
     mResourcesCfg = "resources_d.cfg";
-    mPluginsCfg = "plugins_d.cfg";
+    mPluginsCfg   =   "plugins_d.cfg";
 #endif
 #else
 #ifndef OGRE_STATIC_LIB
     mResourcesCfg = m_ResourcePath + "resources.cfg";
-    mPluginsCfg = m_ResourcePath + "plugins.cfg";
+    mPluginsCfg   = m_ResourcePath +   "plugins.cfg";
 #else
     mResourcesCfg = "resources.cfg";
-    mPluginsCfg = "plugins.cfg";
+    mPluginsCfg   =   "plugins.cfg";
 #endif
 #endif
 
-    if (!setup())
-        return;
+    if (!setup()) return;
 
     mRoot->startRendering();
 
@@ -345,7 +343,6 @@ bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
         mShutDown = true;
     }
 
-
     mCameraMan->injectKeyDown(arg);
     return true;
 }
@@ -366,14 +363,14 @@ bool BaseApplication::mouseMoved(const OIS::MouseEvent &arg)
 bool BaseApplication::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     if (mTrayMgr->injectMouseDown(arg, id)) return true;
-    mCameraMan->injectMouseDown(arg, id);
+    mCameraMan->  injectMouseDown(arg, id);
     return true;
 }
 //---------------------------------------------------------------------------
 bool BaseApplication::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     if (mTrayMgr->injectMouseUp(arg, id)) return true;
-    mCameraMan->injectMouseUp(arg, id);
+    mCameraMan->  injectMouseUp(arg, id);
     return true;
 }
 //---------------------------------------------------------------------------
