@@ -29,6 +29,7 @@ protected:
     SoundPlayer* physSound;
     Scoreboard * physScore;
     bool multiplayer;
+    bool server;
 
     int collisionIgnoreTimer;
     bool collisionIgnore;
@@ -49,6 +50,8 @@ public:
     { physScore = mScore; };
     void setMultiplayer(bool option = true)
     { multiplayer = option; };
+    void setServer(bool option = true)
+    { server = option; };
 };
 
 #endif // #ifndef __PhysicsWorld_h_

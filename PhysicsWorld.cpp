@@ -192,12 +192,12 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                 btVector3    origin = transform.getOrigin();
                 btQuaternion orientation = transform.getRotation();
 
-                if(sn->getName() == "ball")
-                {
-                    //Ball's behavior
-                } 
+                bool paddle1 = (sn->getName() == "paddle");
+                bool paddle2 = (sn->getName() == "paddle2");
 
-                else if(sn->getName() == "paddle" || sn->getName() == "paddle2")
+
+
+                if((multiplayer && ((server && paddle1) ||  (!server && paddle2))) || (!multiplayer && (paddle1 || paddle2)))
                 {
                     int paddleMult = 0;
                     if(sn->getName() == "paddle2")

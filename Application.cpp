@@ -95,6 +95,7 @@ void Application::createScene(void)
     //Set up Physics
     mPhysics = new PhysicsWorld();
     mPhysics->setMultiplayer(multiplayerFlag);
+    mPhysics->setServer(server);
 
     //Lights
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
@@ -107,8 +108,8 @@ void Application::createScene(void)
     if(multiplayerFlag && !server)
     {
         mCamera->setFixedYawAxis(true,-Ogre::Vector3::UNIT_Y);
-        mCamera->setPosition(0, 550, -170);
-        mCamera->lookAt(0, 0, 0);
+        mCamera->setPosition(0, 550, -200);
+        mCamera->lookAt(0, 200, 0);
     }
     else
     {
@@ -158,6 +159,7 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         if(mPhysics == NULL)
             return super;
+
 
         //TRANSLATION
         movementCommands[0] = mKeyboard->isKeyDown(OIS::KC_W)? 1:0; // up 
