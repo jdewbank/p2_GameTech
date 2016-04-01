@@ -192,12 +192,22 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         if(multiplayerFlag) {
             if(net->scanForActivity())
             {
-                for(int i = 0; i < net->udpClientData.size(); ++i)
-                {
-                    ClientData* cd = net->udpClientData[i];
+                if(server) {
+                    for(int i = 0; i < net->udpClientData.size(); ++i)
+                    {
+                        ClientData* cd = net->udpClientData[i];
 
-                    if(cd->updated)
-                        std::cout << "UPDATED!" << std::endl;
+                        if(cd->updated)
+                            std::cout << "UPDATED!" << std::endl;
+                    }
+                } else {
+                    for(int i = 0; i < 10; ++i)
+                    {
+                        ClientData cd = net->udpServerData[i];
+
+                        if(cd.updated)
+                            std::cout << "UPDATED!" << std::endl;
+                    }
                 }
             }
         }
