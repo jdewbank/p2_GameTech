@@ -161,17 +161,19 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             return super;
 
 
+        bool client = multiplayerFlag && !server;
+
         //TRANSLATION
-        movementCommands[0] = mKeyboard->isKeyDown(OIS::KC_W)? 1:0; // up 
-        movementCommands[1] = mKeyboard->isKeyDown(OIS::KC_A)? 1:0; // left
-        movementCommands[2] = mKeyboard->isKeyDown(OIS::KC_S)? 1:0; // down
-        movementCommands[3] = mKeyboard->isKeyDown(OIS::KC_D)? 1:0; // right
+        movementCommands[0] = mKeyboard->isKeyDown(OIS::KC_W)? !client:client; // up 
+        movementCommands[1] = mKeyboard->isKeyDown(OIS::KC_A)? !client:client; // left
+        movementCommands[2] = mKeyboard->isKeyDown(OIS::KC_S)? !client:client; // down
+        movementCommands[3] = mKeyboard->isKeyDown(OIS::KC_D)? !client:client; // right
         
         //ROTATION
-        rotationCommands[0] = mKeyboard->isKeyDown(OIS::KC_UP   )? 1:0; // up 
-        rotationCommands[1] = mKeyboard->isKeyDown(OIS::KC_LEFT )? 1:0; // left
-        rotationCommands[2] = mKeyboard->isKeyDown(OIS::KC_DOWN )? 1:0; // down
-        rotationCommands[3] = mKeyboard->isKeyDown(OIS::KC_RIGHT)? 1:0; // right
+        rotationCommands[0] = mKeyboard->isKeyDown(OIS::KC_UP   )? !client:client; // up 
+        rotationCommands[1] = mKeyboard->isKeyDown(OIS::KC_LEFT )? !client:client; // left
+        rotationCommands[2] = mKeyboard->isKeyDown(OIS::KC_DOWN )? !client:client; // down
+        rotationCommands[3] = mKeyboard->isKeyDown(OIS::KC_RIGHT)? !client:client; // right
         rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
         mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
