@@ -167,7 +167,7 @@ void PhysicsWorld::detectCollisions(void)
     }
 }
 
-void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar frameTime)
+void PhysicsWorld::move(char paddleTranslate[], char paddleRotate[], btScalar frameTime)
 {
     dynamicsWorld->stepSimulation(frameTime);
 
@@ -282,14 +282,55 @@ void PhysicsWorld::move(int paddleTranslate[], int paddleRotate[], btScalar fram
                     //std::cout << "Paddle rigid body is now at (" << body->getCenterOfMassPosition().getX() << ", " << body->getCenterOfMassPosition().getY() << ", " << body->getCenterOfMassPosition().getZ() << ")\n";
                     
                 }
-                    
-                paddle1Position = Ogre::Vector3(
-                    origin.getX(), origin.getY(), origin.getZ());
-                sn->setPosition(paddle1Position);
-                paddle1Quaternion = Ogre::Quaternion(
-                    orientation.getW(), orientation.getX(), 
-                    orientation.getY(), orientation.getZ());
-                sn->setOrientation(paddle1Quaternion);
+                
+                if(multiplayer)
+                {
+
+                    if(server)
+                    {
+                        if(paddle1)
+                        {
+                            //set the values for paddle1
+                            paddle1Position = Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ());
+                        } 
+                        else if (paddle2)
+                        {
+                            //get the values for paddle2
+                            btTransform newTrans = transform;
+                            newTrans.setOrigin(btVector3(paddle2Position.x, paddle2Position.y, paddle2Position.z));
+                            body->getMotionState()->setWorldTransform(newTrans);
+                            body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
+                            body->setCenterOfMassTransform(newTrans);
+                        }
+                    }
+                    else
+                    {
+                        if(paddle2)
+                        {
+                            //set the values for paddle2
+                            paddle2Position = Ogre::Vector3(origin.getX(), origin.getY(), origin.getZ());
+                        }
+                        else if (paddle1)
+                        {
+                            //get the values for paddle1
+                            btTransform newTrans = transform;
+                            newTrans.setOrigin(btVector3(paddle1Position.x, paddle1Position.y, paddle1Position.z));
+                            body->getMotionState()->setWorldTransform(newTrans);
+                            body->translate(newTrans.getOrigin() - body->getCenterOfMassPosition());
+                            body->setCenterOfMassTransform(newTrans);
+                        }
+                    }
+
+                }
+
+
+                // paddle1Position = Ogre::Vector3(
+                //     origin.getX(), origin.getY(), origin.getZ());
+                // sn->setPosition(paddle1Position);
+                // paddle1Quaternion = Ogre::Quaternion(
+                //     orientation.getW(), orientation.getX(), 
+                //     orientation.getY(), orientation.getZ());
+                // sn->setOrientation(paddle1Quaternion);
 
             }
         }

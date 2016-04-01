@@ -114,25 +114,10 @@ bool Application::setupNetwork()
     {
         net->addNetworkInfo(PROTOCOL_UDP,NULL,63281);
         bool startResult = net->startServer();
-        std::cout << "Server Start Result: " << startResult << std::endl;
 
         net->acceptConnections();
         while (!net->pollForActivity());
         net->denyConnections();
-
-        std::cout << "list length: " << net->udpClientData.size() << std::endl;
-
-        for(int i = 0; i < net->udpClientData.size(); ++i)
-        {
-            ClientData* cd = net->udpClientData[i];
-
-            float* f_buf = (float*) cd->output;
-
-            for(int i = 0; i < 3; ++i)
-                std::cout << i << ": " << f_buf[i] << std::endl;
-
-            std::cout << std::endl;
-        }
 
     }
 
@@ -140,18 +125,9 @@ bool Application::setupNetwork()
     {
         net->addNetworkInfo(PROTOCOL_UDP,host,63281);
         bool startResult = net->startClient();
-        std::cout << "Client Start Result: " << startResult << std::endl;
 
-        float f1 = 10.6f;
-        float f2 = -19.2f;
-        float f3 = 0.0f;
 
         const char buf[128] = {};
-        float* f_buf = (float*)buf;
-
-        f_buf[0] = f1;
-        f_buf[1] = f2;
-        f_buf[2] = f3;
 
         net->messageServer(PROTOCOL_UDP,buf,sizeof(buf));
     }
@@ -183,7 +159,6 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
         rotationCommands[3] = mKeyboard->isKeyDown(OIS::KC_RIGHT)? !client:client; // right
         rotationCommands[4] = mKeyboard->isKeyDown(OIS::KC_SPACE)? 1:0; // reset
         
-        mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
         
         if(multiplayerFlag) 
         {
@@ -210,64 +185,93 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mCamera->lookAt(mPhysics->paddle1Position);
         }
 
+
+        Ogre::Vector3 otherLocation;
+        if(multiplayerFlag)
+        {
+            if(server)
+            {
+                const char buf[128] = {0};
+
+                char* c_buf = (char*) buf;
+                c_buf[0] = 's';
+
+                float* f_buf = (float*)&buf[1];
+                f_buf[0] = (float) mPhysics->paddle1Position.x;
+                f_buf[1] = (float) mPhysics->paddle1Position.y;
+                f_buf[2] = (float) mPhysics->paddle1Position.z;
+
+                f_buf[3] = (float) mPhysics->paddle1Quaternion.w;
+                f_buf[4] = (float) mPhysics->paddle1Quaternion.x;
+                f_buf[5] = (float) mPhysics->paddle1Quaternion.y;
+                f_buf[6] = (float) mPhysics->paddle1Quaternion.z;
+
+
+                net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
+
+            }
+            else
+            {
+                const char buf[128] = {0};
+
+                char* c_buf = (char*) buf;
+                c_buf[0] = 'c';
+
+                float* f_buf = (float*)&buf[1];
+                f_buf[0] = (float) mPhysics->paddle2Position.x;
+                f_buf[1] = (float) mPhysics->paddle2Position.y;
+                f_buf[2] = (float) mPhysics->paddle2Position.z;
+
+                f_buf[3] = (float) mPhysics->paddle2Quaternion.w;
+                f_buf[4] = (float) mPhysics->paddle2Quaternion.x;
+                f_buf[5] = (float) mPhysics->paddle2Quaternion.y;
+                f_buf[6] = (float) mPhysics->paddle2Quaternion.z;
+
+
+                net->messageServer(PROTOCOL_UDP,buf,sizeof(buf));
+            }
+        }
+
+
+
         if(multiplayerFlag) 
         {
             if(net->scanForActivity())
             {
                 if(server)
                 {
-                    const char buf[128] = {0};
-
-                    float* f_buf = (float*)buf;
-                    f_buf[0] = (float) mPhysics->paddle1Position.x;
-                    f_buf[1] = (float) mPhysics->paddle1Position.y;
-                    f_buf[2] = (float) mPhysics->paddle1Position.z;
-
-                    f_buf[3] = (float) mPhysics->paddle1Quaternion.w;
-                    f_buf[4] = (float) mPhysics->paddle1Quaternion.x;
-                    f_buf[5] = (float) mPhysics->paddle1Quaternion.y;
-                    f_buf[6] = (float) mPhysics->paddle1Quaternion.z;
-
-                    net->messageClients(PROTOCOL_UDP,buf, sizeof(buf));
 
                     for(int i = 0; i < net->udpClientData.size(); ++i)
                     {
                         ClientData* cd = net->udpClientData[i];
 
                         if(cd->updated)
-                            std::cout << "UPDATED!" << std::endl;
+                        {                      
+                            char* buf = cd->output;
 
-                            float* f_buf = (float*) cd->output;
+                            if(buf[0] == 'c')
+                            {
+                                float* f_buf = (float*)&buf[1];
 
-                            mPhysics->paddle2Position = Ogre::Vector3( 
-                                (float)f_buf[0], 
-                                (float)f_buf[1], 
-                                (float)f_buf[2]);
+                                mPhysics->paddle2Position = Ogre::Vector3( 
+                                    (float)f_buf[0], 
+                                    (float)f_buf[1], 
+                                    (float)f_buf[2]);
 
-                            mPhysics->paddle2Quaternion = Ogre::Quaternion(
-                                (float)f_buf[3],
-                                (float)f_buf[4],
-                                (float)f_buf[5],
-                                (float)f_buf[6]);
+                                mPhysics->paddle2Quaternion = Ogre::Quaternion(
+                                    (float)f_buf[3],
+                                    (float)f_buf[4],
+                                    (float)f_buf[5],
+                                    (float)f_buf[6]);
+                            }
+                        }
+
+
                    }
                 } 
                 else //client
                 {   
-                    const char buf[128] = {0};
 
-                    float* f_buf = (float*)buf;
-                    f_buf[0] = (float) mPhysics->paddle2Position.x;
-                    f_buf[1] = (float) mPhysics->paddle2Position.y;
-                    f_buf[2] = (float) mPhysics->paddle2Position.z;
-
-                    f_buf[3] = (float) mPhysics->paddle2Quaternion.w;
-                    f_buf[4] = (float) mPhysics->paddle2Quaternion.x;
-                    f_buf[5] = (float) mPhysics->paddle2Quaternion.y;
-                    f_buf[6] = (float) mPhysics->paddle2Quaternion.z;
-
-                    //f_buf[7] = getScore(2);
-
-                    net->messageServer(PROTOCOL_UDP,buf, sizeof(buf));
     
                     for(int i = 0; i < 10; ++i)
                     {
@@ -275,10 +279,8 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
                         if(cd.updated)
                         {
-                            std::cout << "UPDATED!" << std::endl;
-
-                            char*  buf = cd.output;
-                            float* f_buf = (float*) cd.output;
+                        
+                            char* buf = cd.output;
 
                             if(buf[0] == 'a')
                             {
@@ -292,10 +294,11 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                                 int player = (int)buf[1];
                                 std::cout << "Reset the points for player " << buf[1] <<  std::endl; 
                                 mScore->resetScore(player);
-                            }
-                            
-                            else //assuming float vector
+                            }                            
+                            else if(buf[0] == 's')
                             {
+
+                                float* f_buf = (float*)&buf[1];
                                 mPhysics->paddle1Position = Ogre::Vector3( 
                                     (float)f_buf[0], 
                                     (float)f_buf[1], 
@@ -312,6 +315,9 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 }
             }
         }
+
+        mPhysics->move(movementCommands, rotationCommands, evt.timeSinceLastFrame);
+
     }
     return super;
 }

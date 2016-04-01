@@ -50,8 +50,8 @@ protected:
 
   OgreBites::ParamsPanel* mScorePanel; 
 
-  int movementCommands[4];
-  int rotationCommands[5];
+  char movementCommands[4];
+  char rotationCommands[5];
   virtual void createScene(void);
   virtual bool setupNetwork();
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);

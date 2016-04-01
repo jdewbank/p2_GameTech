@@ -47,7 +47,7 @@ public:
     void addRigidBodyToDynamicsWorld(btRigidBody*);
     void addCollisionShape(btCollisionShape*);
     void detectCollisions(void);
-    void move(int[], int[], btScalar);
+    void move(char[], char[], btScalar);
     
     void setSoundPlayer(SoundPlayer* mSound) 
     { physSound = mSound; };
